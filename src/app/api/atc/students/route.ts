@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     
     // Check required fields
-    const reqFields = ["name", "fatherName", "motherName", "dob", "gender", "mobile", "currentAddress", "permanentAddress", "course", "highestQualification", "session", "category", "admissionFees", "admissionDate"];
+    const reqFields = ["name", "fatherName", "motherName", "dob", "gender", "mobile", "currentAddress", "permanentAddress", "course", "session", "category", "admissionFees", "admissionDate"];
     for (const f of reqFields) {
       const val = formData.get(f);
       if (!val || String(val).trim() === "") {
@@ -142,7 +142,11 @@ export async function POST(request: Request) {
       paidAmount: 0,
       duesAmount: Number(formData.get("admissionFees") || 0),
       admissionDate: String(formData.get("admissionDate")).trim(),
-      highestQualification: String(formData.get("highestQualification")).trim(),
+      highestQualification: String(formData.get("highestQualification") ?? "").trim(),
+      qualSchool: String(formData.get("qualSchool") ?? "").trim(),
+      qualSchoolOther: String(formData.get("qualSchoolOther") ?? "").trim(),
+      qualYearPassing: String(formData.get("qualYearPassing") ?? "").trim(),
+      qualPercentObtained: String(formData.get("qualPercentObtained") ?? "").trim(),
       photo,
       studentSignature,
       aadharDoc,

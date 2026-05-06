@@ -106,7 +106,8 @@ export async function PATCH(
         "photo", "studentSignature", "qualificationDoc", "highestQualDoc", "marksheet10th", "marksheet12th",
         "graduationDoc", "aadharDoc", "otherDocs",
         "dob", "gender", "category", "religion", "nationality", "session",
-        "maritalStatus", "courseType", "highestQualification", "admissionFees",
+        "maritalStatus", "courseType", "highestQualification", "qualSchool", "qualSchoolOther",
+        "qualYearPassing", "qualPercentObtained", "admissionFees",
         "admissionDate", "referredBy", "examMode", "totalFee"
       ];
       

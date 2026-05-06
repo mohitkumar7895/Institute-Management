@@ -3,6 +3,11 @@
 import { useRef, useState, useEffect, type FormEvent } from "react";
 import { CheckCircle, FileText, User, MapPin, CreditCard } from "lucide-react";
 import { useBrand } from "@/context/BrandContext";
+import HighestQualificationMultiSelect from "@/components/common/HighestQualificationMultiSelect";
+import {
+  formatHighestQualificationMulti,
+  type QualificationSelectValue,
+} from "@/lib/qualificationOptions";
 
 interface Course {
   _id: string;
@@ -24,7 +29,11 @@ export default function DirectAdmissionForm() {
   const [sameAddress, setSameAddress] = useState(false);
   const [currentAddr, setCurrentAddr] = useState("");
   const [disability, setDisability] = useState("No");
-  const [selectedQual, setSelectedQual] = useState("");
+  const [qualSelected, setQualSelected] = useState<QualificationSelectValue[]>([]);
+  const [qualOther, setQualOther] = useState("");
+  const [qualSchool, setQualSchool] = useState("");
+  const [qualYearPassing, setQualYearPassing] = useState("");
+  const [qualPercent, setQualPercent] = useState("");
   const [invalidFields, setInvalidFields] = useState<Set<string>>(new Set());
   const [admissionDate, setAdmissionDate] = useState("");
   const [isMounted, setIsMounted] = useState(false);
@@ -119,6 +128,11 @@ export default function DirectAdmissionForm() {
     try {
       const form = new FormData(formEl);
       if (sameAddress) form.set("permanentAddress", currentAddr);
+      form.set("highestQualification", formatHighestQualificationMulti(qualSelected, qualOther));
+      form.set("qualSchool", qualSchool);
+      form.set("qualSchoolOther", "");
+      form.set("qualYearPassing", qualYearPassing);
+      form.set("qualPercentObtained", qualPercent);
 
       const res = await fetch("/api/direct-admission", { 
         method: "POST", 
@@ -136,7 +150,11 @@ export default function DirectAdmissionForm() {
       setSameAddress(false);
       setCurrentAddr("");
       setDisability("No");
-      setSelectedQual("");
+      setQualSelected([]);
+      setQualOther("");
+      setQualSchool("");
+      setQualYearPassing("");
+      setQualPercent("");
     } catch (err: unknown) {
       setMsg({
         type: "error",
@@ -338,38 +356,56 @@ export default function DirectAdmissionForm() {
             <FileText className="w-4 h-4 text-purple-500" /> Credentials & Documentation
           </h4>
           <p className="text-[10px] font-black uppercase tracking-wider text-blue-600">Upload Limit: JPG/PNG up to 100KB, PDF up to 500KB</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div>
-              <label className={labelCls("highestQualification")}>Highest Qualification *</label>
-              <select 
-                required 
-                name="highestQualification" 
-                className={inputCls("highestQualification")}
-                value={selectedQual}
-                onChange={(e) => setSelectedQual(e.target.value)}
-              >
-                <option value="">Select Qualification</option>
-                <option value="Below Matric">Below Matric</option>
-                <option value="Matriculation">Matriculation</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Graduation">Graduation</option>
-                <option value="Post Graduation">Post Graduation</option>
-                <option value="PHD Above">PHD Above</option>
-              </select>
-            </div>
-            {selectedQual && (
-              <div className="animate-in slide-in-from-top-2 duration-300 md:col-span-2">
-                <label className={labelCls("qualificationDetail")}>Course name *</label>
-                <input
-                  required
-                  name="qualificationDetail"
-                  className={inputCls("qualificationDetail")}
-                  placeholder={`Enter ${selectedQual} details...`}
-                />
+          <div className="space-y-5">
+            <HighestQualificationMultiSelect
+              selected={qualSelected}
+              otherDetail={qualOther}
+              onSelectedChange={setQualSelected}
+              onOtherDetailChange={setQualOther}
+              labelCls={labelCls}
+              inputCls={inputCls}
+            />
+            <div className="space-y-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className={labelCls("qualSchool")}>College / School name</label>
+                  <input
+                    type="text"
+                    value={qualSchool}
+                    onChange={(e) => setQualSchool(e.target.value)}
+                    className={`${inputCls("qualSchool")} py-3 text-base`}
+                    placeholder="e.g. as on marksheet"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className={labelCls("qualYearPassing")}>Year of passing</label>
+                  <input
+                    type="text"
+                    value={qualYearPassing}
+                    onChange={(e) => setQualYearPassing(e.target.value)}
+                    className={`${inputCls("qualYearPassing")} py-3 text-base`}
+                    placeholder="e.g. 2024 or N/A"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className={labelCls("qualPercentObtained")}>% Obtained</label>
+                  <input
+                    type="text"
+                    value={qualPercent}
+                    onChange={(e) => setQualPercent(e.target.value)}
+                    className={`${inputCls("qualPercentObtained")} py-3 text-base`}
+                    placeholder="e.g. 72% or CGPA"
+                    autoComplete="off"
+                  />
+                </div>
               </div>
-            )}
-            <div><label className={labelCls("aadharNo")}>Aadhar Number</label><input name="aadharNo" className={inputCls("aadharNo")} placeholder="12-digit UID" maxLength={12} /></div>
-            <div><label className={labelCls("referredBy")}>Referred By</label><input name="referredBy" className={inputCls("referredBy")} placeholder="Staff or Partner name" /></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label className={labelCls("aadharNo")}>Aadhar Number</label><input name="aadharNo" className={`${inputCls("aadharNo")} py-3 text-base`} placeholder="12-digit UID" maxLength={12} /></div>
+              <div><label className={labelCls("referredBy")}>Referred By</label><input name="referredBy" className={`${inputCls("referredBy")} py-3 text-base`} placeholder="Staff or Partner name" /></div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">

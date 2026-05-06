@@ -44,6 +44,11 @@ export interface IStudent {
   disabilityDetails?: string;
   admissionFees: string;
   highestQualification: string;
+  /** College/school name (free text). Legacy rows may have old dropdown values in `qualSchool` + `qualSchoolOther`. */
+  qualSchool?: string;
+  qualSchoolOther?: string;
+  qualYearPassing?: string;
+  qualPercentObtained?: string;
   qualificationDoc?: string;
   photo?: string;
   idProof?: string;
@@ -106,7 +111,11 @@ const StudentSchema = new Schema<IStudent>(
     disabilityDetails: { type: String },
     admissionFees: { type: String, required: true },
     admissionDate: { type: String, required: true },
-    highestQualification: { type: String, required: true },
+    highestQualification: { type: String, default: "" },
+    qualSchool: { type: String, default: "" },
+    qualSchoolOther: { type: String, default: "" },
+    qualYearPassing: { type: String, default: "" },
+    qualPercentObtained: { type: String, default: "" },
     qualificationDoc: { type: String },
     photo: { type: String },
     idProof: { type: String },

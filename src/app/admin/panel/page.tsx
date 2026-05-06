@@ -35,6 +35,7 @@ import {
   serializeGradeBandsJson,
   type GradeBand,
 } from "@/lib/marksheetGradeScaleCore";
+import { HIGHEST_QUALIFICATION_SELECT_OPTIONS } from "@/lib/qualificationOptions";
 import dynamic from "next/dynamic";
 import StudyMaterialManager from "@/components/admin/StudyMaterialManager";
 import WalletRequestManager from "@/components/admin/WalletRequestManager";
@@ -90,6 +91,10 @@ interface Student {
   admissionFees: string;
   admissionDate?: string;
   highestQualification: string;
+  qualSchool?: string;
+  qualSchoolOther?: string;
+  qualYearPassing?: string;
+  qualPercentObtained?: string;
   qualificationDetail?: string;
   status: "pending" | "approved" | "rejected" | "active" | "pending_atc" | "pending_admin";
   isDirectAdmission?: boolean;
@@ -116,15 +121,9 @@ interface Student {
   duesAmount?: number;
 }
 
-/** Matches ATC student registration (StudentManager). */
-const ADMIN_EDIT_QUALIFICATION_OPTIONS = [
-  "Below Matric",
-  "Matriculation",
-  "Intermediate",
-  "Graduation",
-  "Post Graduation",
-  "PHD Above",
-] as const;
+const ADMIN_QUALIFICATION_DROPDOWN_OPTIONS = HIGHEST_QUALIFICATION_SELECT_OPTIONS.map(
+  (o) => o.value,
+);
 
 type StudentLooseFields = {
   aadhaarNo?: string;
@@ -3411,6 +3410,9 @@ export default function AdminPanelPage() {
                             { label: "Session", key: "session" },
                             { label: "Course Type", key: "courseType" },
                             { label: "Highest Qualification", key: "highestQualification", kind: "qualSelect" as const },
+                            { label: "College / School name", key: "qualSchool" },
+                            { label: "Year of passing", key: "qualYearPassing" },
+                            { label: "% Obtained", key: "qualPercentObtained" },
                             { label: "Exam Mode", key: "examMode", kind: "examSelect" as const },
                             { label: "Admission Date", key: "admissionDate" },
                             { label: "Total Fee", key: "admissionFees" },
@@ -3427,23 +3429,11 @@ export default function AdminPanelPage() {
                                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition bg-white"
                               >
                                 <option value="">Select qualification</option>
-                                {ADMIN_EDIT_QUALIFICATION_OPTIONS.map((opt) => (
+                                {ADMIN_QUALIFICATION_DROPDOWN_OPTIONS.map((opt) => (
                                   <option key={opt} value={opt}>
                                     {opt}
                                   </option>
                                 ))}
-                                {(() => {
-                                  const v = getStudentFieldValue(studentEditValues, field.key);
-                                  if (!v?.trim()) return null;
-                                  if (ADMIN_EDIT_QUALIFICATION_OPTIONS.includes(v as (typeof ADMIN_EDIT_QUALIFICATION_OPTIONS)[number])) {
-                                    return null;
-                                  }
-                                  return (
-                                    <option value={v}>
-                                      {v} (current)
-                                    </option>
-                                  );
-                                })()}
                               </select>
                             ) : "kind" in field && field.kind === "examSelect" ? (
                               <select
@@ -3698,6 +3688,9 @@ export default function AdminPanelPage() {
                                   <PrintField label="Academic Session" value={studentEditValues.session} />
                                   <PrintField label="Course Type" value={studentEditValues.courseType} />
                                   <PrintField label="Highest Qualification" value={studentEditValues.highestQualification} />
+                                  <PrintField label="College / School name" value={studentEditValues.qualSchool} />
+                                  <PrintField label="Year of passing" value={studentEditValues.qualYearPassing} />
+                                  <PrintField label="% Obtained" value={studentEditValues.qualPercentObtained} />
                                   <PrintField label="Admission Date" value={studentEditValues.admissionDate} />
                                   <PrintField label="Total Fee" value={studentEditValues.admissionFees} />
                               </div>

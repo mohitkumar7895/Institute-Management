@@ -33,8 +33,7 @@ export async function POST(request: Request) {
       "currentAddress",
       "course",
       "session",
-      "highestQualification",
-      "centerCode"
+      "centerCode",
     ];
 
     for (const field of requiredFields) {
@@ -88,7 +87,11 @@ export async function POST(request: Request) {
       permanentAddress: String(formData.get("permanentAddress") || formData.get("currentAddress")).trim(),
       course: String(formData.get("course")).trim(),
       session: String(formData.get("session")).trim(),
-      highestQualification: String(formData.get("highestQualification")).trim(),
+      highestQualification: String(formData.get("highestQualification") ?? "").trim(),
+      qualSchool: String(formData.get("qualSchool") ?? "").trim(),
+      qualSchoolOther: String(formData.get("qualSchoolOther") ?? "").trim(),
+      qualYearPassing: String(formData.get("qualYearPassing") ?? "").trim(),
+      qualPercentObtained: String(formData.get("qualPercentObtained") ?? "").trim(),
       aadharNo: String(formData.get("aadharNo") || "").trim(),
       referredBy: String(formData.get("referredBy") || "").trim(),
       category: String(formData.get("category") || "General"),

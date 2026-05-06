@@ -7,6 +7,14 @@ import StudentIdCard from "@/components/common/StudentIdCard";
 import { useAuth } from "@/context/AuthContext";
 import { apiFetch } from "@/utils/api";
 import {
+  HIGHEST_QUALIFICATION_SELECT_OPTIONS,
+  formatHighestQualificationMulti,
+  parseHighestQualificationMulti,
+  type QualificationSelectValue,
+  formatQualSchoolDisplay,
+} from "@/lib/qualificationOptions";
+import HighestQualificationMultiSelect from "@/components/common/HighestQualificationMultiSelect";
+import {
   DEFAULT_MARKSHEET_GRADE_BANDS,
   MARKSHEET_GRADE_BANDS_KEY,
   gradeFromMarksOrSubjectRows,
@@ -26,6 +34,10 @@ interface Student {
   currentAddress?: string;
   permanentAddress?: string;
   highestQualification?: string;
+  qualSchool?: string;
+  qualSchoolOther?: string;
+  qualYearPassing?: string;
+  qualPercentObtained?: string;
   qualificationDetail?: string;
   parentsMobile?: string;
   nationality?: string;
@@ -87,7 +99,11 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
   const [sameAddress, setSameAddress] = useState(false);
   const [currentAddr, setCurrentAddr] = useState("");
   const [disability, setDisability] = useState("No");
-  const [selectedQual, setSelectedQual] = useState("");
+  const [qualSelected, setQualSelected] = useState<QualificationSelectValue[]>([]);
+  const [qualOther, setQualOther] = useState("");
+  const [qualSchool, setQualSchool] = useState("");
+  const [qualYearPassing, setQualYearPassing] = useState("");
+  const [qualPercent, setQualPercent] = useState("");
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [studentFilter, setStudentFilter] = useState<"all" | "pending" | "approved" | "rejected" | "disabled">(
     initialFilter || (isDirectAdmission ? "pending" : "all")
@@ -106,7 +122,8 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
     name: "", fatherName: "", motherName: "", dob: "", gender: "", 
     mobile: "", parentsMobile: "", email: "", course: "", courseType: "Regular", session: "",
     admissionDate: "", currentAddress: "", permanentAddress: "", 
-    highestQualification: "", qualificationDetail: "", aadharNo: "",
+    highestQualification: "", qualSchool: "", qualYearPassing: "", qualPercentObtained: "",
+    aadharNo: "",
     category: "", nationality: "Indian", religion: "", maritalStatus: "", disability: false,
     disabilityDetails: "", referredBy: "", totalFee: 0
   });
@@ -217,8 +234,7 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
         const fields = [
           'name', 'fatherName', 'motherName', 'dob', 'gender', 'category', 
           'nationality', 'religion', 'maritalStatus', 'mobile', 'parentsMobile', 
-          'email', 'currentAddress', 'permanentAddress', 'highestQualification', 
-          'qualificationDetail', 'aadharNo', 'session', 'course', 'courseType', 
+          'email', 'currentAddress', 'permanentAddress',
           'examMode', 'admissionFees'
         ];
         
@@ -232,7 +248,17 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
         // Handle specific states
         if (s.currentAddress) setCurrentAddr(s.currentAddress);
         if (s.disability) setDisability(s.disability ? "Yes" : "No");
-        if (s.highestQualification) setSelectedQual(s.highestQualification);
+        if (s.highestQualification) {
+          const p = parseHighestQualificationMulti(s.highestQualification);
+          setQualSelected(p.selected);
+          setQualOther(p.otherDetail);
+        } else {
+          setQualSelected([]);
+          setQualOther("");
+        }
+        setQualSchool(formatQualSchoolDisplay(s.qualSchool, s.qualSchoolOther));
+        setQualYearPassing(String(s.qualYearPassing ?? ""));
+        setQualPercent(String(s.qualPercentObtained ?? ""));
         
         setMsg({ type: "success", text: "Student details fetched and auto-filled!" });
       }
@@ -294,6 +320,11 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
     try {
       const form = new FormData(formEl);
       if (sameAddress) form.set("permanentAddress", currentAddr);
+      form.set("highestQualification", formatHighestQualificationMulti(qualSelected, qualOther));
+      form.set("qualSchool", qualSchool);
+      form.set("qualSchoolOther", "");
+      form.set("qualYearPassing", qualYearPassing);
+      form.set("qualPercentObtained", qualPercent);
 
       // Auto-compress photo and signature
       const compressImage = async (file: File): Promise<File | Blob> => {
@@ -399,6 +430,11 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
       setSameAddress(false);
       setCurrentAddr("");
       setDisability("No");
+      setQualSelected([]);
+      setQualOther("");
+      setQualSchool("");
+      setQualYearPassing("");
+      setQualPercent("");
       await fetchStudents();
       setTab("list");
     } catch (err: unknown) {
@@ -587,7 +623,8 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
         },
         body: JSON.stringify({ 
           studentId: selectedStudent._id,
-          ...editForm
+          ...editForm,
+          qualSchoolOther: "",
         })
       });
       if (res.ok) {
@@ -952,7 +989,9 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
                                   currentAddress: s.currentAddress || "",
                                   permanentAddress: s.permanentAddress || "",
                                   highestQualification: s.highestQualification || "",
-                                  qualificationDetail: s.qualificationDetail || "",
+                                  qualSchool: formatQualSchoolDisplay(s.qualSchool, s.qualSchoolOther),
+                                  qualYearPassing: s.qualYearPassing || "",
+                                  qualPercentObtained: s.qualPercentObtained || "",
                                   aadharNo: s.aadharNo || "",
                                   category: s.category || "General",
                                   nationality: s.nationality || "Indian",
@@ -1176,38 +1215,56 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
                 <FileText className="w-4 h-4 text-purple-500" /> Credentials & Documentation
               </h4>
               <p className="text-[10px] font-black uppercase tracking-wider text-blue-600">Upload Limit: JPG/PNG up to 100KB, PDF up to 500KB</p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div>
-                  <label className={labelCls("highestQualification")}>Highest Qualification *</label>
-                  <select 
-                    required 
-                    name="highestQualification" 
-                    className={inputCls("highestQualification")}
-                    value={selectedQual}
-                    onChange={(e) => setSelectedQual(e.target.value)}
-                  >
-                    <option value="">Select Qualification</option>
-                    <option value="Below Matric">Below Matric</option>
-                    <option value="Matriculation">Matriculation</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Graduation">Graduation</option>
-                    <option value="Post Graduation">Post Graduation</option>
-                    <option value="PHD Above">PHD Above</option>
-                  </select>
-                </div>
-                {selectedQual && (
-                  <div className="animate-in slide-in-from-top-2 duration-300">
-                    <label className={labelCls("qualificationDetail")}>Course name *</label>
-                    <input 
-                      required 
-                      name="qualificationDetail" 
-                      className={inputCls("qualificationDetail")} 
-                      placeholder={`Enter ${selectedQual} details...`} 
-                    />
+              <div className="space-y-5">
+                <HighestQualificationMultiSelect
+                  selected={qualSelected}
+                  otherDetail={qualOther}
+                  onSelectedChange={setQualSelected}
+                  onOtherDetailChange={setQualOther}
+                  labelCls={labelCls}
+                  inputCls={inputCls}
+                />
+                <div className="space-y-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className={labelCls("qualSchool")}>College / School name</label>
+                      <input
+                        type="text"
+                        value={qualSchool}
+                        onChange={(e) => setQualSchool(e.target.value)}
+                        className={`${inputCls("qualSchool")} py-3 text-base`}
+                        placeholder="e.g. as on marksheet"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls("qualYearPassing")}>Year of passing</label>
+                      <input
+                        type="text"
+                        value={qualYearPassing}
+                        onChange={(e) => setQualYearPassing(e.target.value)}
+                        className={`${inputCls("qualYearPassing")} py-3 text-base`}
+                        placeholder="e.g. 2024 or N/A"
+                        autoComplete="off"
+                      />
+                    </div>
+                    <div>
+                      <label className={labelCls("qualPercentObtained")}>% Obtained</label>
+                      <input
+                        type="text"
+                        value={qualPercent}
+                        onChange={(e) => setQualPercent(e.target.value)}
+                        className={`${inputCls("qualPercentObtained")} py-3 text-base`}
+                        placeholder="e.g. 72% or CGPA"
+                        autoComplete="off"
+                      />
+                    </div>
                   </div>
-                )}
-                <div><label className={labelCls("aadharNo")}>Aadhar Number</label><input name="aadharNo" className={inputCls("aadharNo")} placeholder="12-digit UID" maxLength={12} /></div>
-                <div><label className={labelCls("referredBy")}>Referred By</label><input name="referredBy" className={inputCls("referredBy")} placeholder="Staff or Partner name" /></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div><label className={labelCls("aadharNo")}>Aadhar Number</label><input name="aadharNo" className={`${inputCls("aadharNo")} py-3 text-base`} placeholder="12-digit UID" maxLength={12} /></div>
+                  <div><label className={labelCls("referredBy")}>Referred By</label><input name="referredBy" className={`${inputCls("referredBy")} py-3 text-base`} placeholder="Staff or Partner name" /></div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
@@ -1486,13 +1543,86 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
                     <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-3">
                        <BookOpen className="w-4 h-4 text-emerald-600" /> Academic & admission info
                     </h4>
+                    {isEditing ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          <div>
+                            <label className={basicLabelCls}>College / School name</label>
+                            <input
+                              type="text"
+                              value={editForm.qualSchool}
+                              onChange={(e) => setEditForm({ ...editForm, qualSchool: e.target.value })}
+                              className={modalInputCls("qualSchool")}
+                              placeholder="e.g. as on marksheet"
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div>
+                            <label className={basicLabelCls}>Year of passing</label>
+                            <input
+                              type="text"
+                              value={editForm.qualYearPassing}
+                              onChange={(e) => setEditForm({ ...editForm, qualYearPassing: e.target.value })}
+                              className={modalInputCls("qualYearPassing")}
+                              placeholder="e.g. 2024 or N/A"
+                              autoComplete="off"
+                            />
+                          </div>
+                          <div>
+                            <label className={basicLabelCls}>% Obtained</label>
+                            <input
+                              type="text"
+                              value={editForm.qualPercentObtained}
+                              onChange={(e) => setEditForm({ ...editForm, qualPercentObtained: e.target.value })}
+                              className={modalInputCls("qualPercentObtained")}
+                              placeholder="e.g. 72% or CGPA"
+                              autoComplete="off"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/60">
+                        <table className="w-full min-w-[320px] text-left text-sm">
+                          <thead>
+                            <tr className="border-b border-slate-200 bg-white text-[10px] font-black uppercase tracking-wider text-slate-500">
+                              <th className="px-4 py-2">College / School name</th>
+                              <th className="px-4 py-2">Year of passing</th>
+                              <th className="px-4 py-2">% Obtained</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="px-4 py-3 font-semibold text-slate-800">
+                                {pickValue(
+                                  formatQualSchoolDisplay(
+                                    selectedStudent.qualSchool,
+                                    selectedStudent.qualSchoolOther,
+                                  ),
+                                )}
+                              </td>
+                              <td className="px-4 py-3 font-semibold text-slate-800">
+                                {pickValue(selectedStudent.qualYearPassing)}
+                              </td>
+                              <td className="px-4 py-3 font-semibold text-slate-800">
+                                {pickValue(selectedStudent.qualPercentObtained)}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {[
                           { label: "Course Name", key: "course", type: "select", options: availableCourses.map(c => c.name) },
                           { label: "Session", key: "session" },
                           { label: "Admission Date", key: "admissionDate", type: "date" },
-                          { label: "Highest Qualification", key: "highestQualification" },
-                          { label: "Course name", key: "qualificationDetail" },
+                          {
+                            label: "Highest Qualification",
+                            key: "highestQualification",
+                            type: "select",
+                            options: HIGHEST_QUALIFICATION_SELECT_OPTIONS.map((o) => o.value),
+                          },
                           { label: "Exam Mode", key: "examMode", type: "select", options: ["online", "offline"] },
                           { label: "Course Type", key: "courseType", type: "select", options: ["Regular", "ODL (Open Distance Learning)"] },
                           { label: "Referred By", key: "referredBy" },
