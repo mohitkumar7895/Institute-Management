@@ -22,10 +22,6 @@ export default function StudentCertificatePage() {
   const [atcSig, setAtcSig] = useState("");
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
-  /** Background API settled (success / fail) — avoids rendering text before we know if a template exists. */
-  const [bgResolved, setBgResolved] = useState(false);
-  /** Text overlay only after template bitmap is painted (when a template URL exists). */
-  const [templatePainted, setTemplatePainted] = useState(true);
 
   const verifyUrl =
     typeof window !== "undefined" ? `${window.location.origin}/verification/certificate` : "";
@@ -37,7 +33,6 @@ export default function StudentCertificatePage() {
     setBg("");
     setSig("");
     setAtcSig("");
-    setBgResolved(false);
 
     void apiFetch("/api/public/background/certificate")
       .then((r) => r.json())
@@ -46,10 +41,7 @@ export default function StudentCertificatePage() {
         const nextBg = typeof body?.url === "string" && body.url.trim() !== "" ? body.url : "";
         setBg(nextBg);
       })
-      .catch(() => {})
-      .finally(() => {
-        if (!cancelled) setBgResolved(true);
-      });
+      .catch(() => {});
 
     void apiFetch("/api/public/settings?key=auth_signature")
       .then((r) => r.json())
@@ -91,19 +83,9 @@ export default function StudentCertificatePage() {
     };
   }, [examId, router]);
 
-  useEffect(() => {
-    if (!bg) setTemplatePainted(true);
-    else setTemplatePainted(false);
-  }, [bg]);
-
-  const onTemplatePainted = useCallback(() => {
-    setTemplatePainted(true);
-  }, []);
-
   const handleDownloadPdf = useCallback(async () => {
     const el = document.getElementById("cert-a4");
     if (!el || !data) return;
-    if (!bgResolved || (bg && !templatePainted)) return;
     setDownloading(true);
     try {
       const studentObj =
@@ -117,11 +99,11 @@ export default function StudentCertificatePage() {
     } finally {
       setDownloading(false);
     }
-  }, [data, bg, templatePainted, bgResolved]);
+  }, [data]);
 
   const docPending = loading && !data;
-  const pdfReady = !!(data && bgResolved && (!bg || templatePainted));
-  const showTextOverlay = !!(data && bgResolved && (!bg || templatePainted));
+  const pdfReady = !!data;
+  const showTextOverlay = !!data;
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-slate-100 py-10 print:bg-white print:p-0">
@@ -159,7 +141,7 @@ export default function StudentCertificatePage() {
         id="cert-a4"
         className="relative isolate h-[210mm] w-[297mm] overflow-hidden bg-white shadow-2xl print:shadow-none"
       >
-        {bg ? <DocumentTemplateBackground src={bg} onPainted={onTemplatePainted} /> : null}
+        {bg ? <DocumentTemplateBackground src={bg} /> : null}
         {showTextOverlay ? (
           <CertificateBackgroundOverlay
             data={data}

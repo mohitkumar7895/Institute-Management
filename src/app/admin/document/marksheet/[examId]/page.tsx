@@ -25,23 +25,9 @@ export default function AdminMarksheetPage() {
   const [bg, setBg] = useState("");
   const [sig, setSig] = useState("");
   const [atcSig, setAtcSig] = useState("");
-  const [templatePainted, setTemplatePainted] = useState(true);
   const [downloading, setDownloading] = useState(false);
-  const [bgResolved, setBgResolved] = useState(false);
-
-  const showBgForTemplate = !!(data && !isPrintMode && !isZipPrintMode && bg);
 
   useEffect(() => {
-    if (!showBgForTemplate) setTemplatePainted(true);
-    else setTemplatePainted(false);
-  }, [showBgForTemplate]);
-
-  const onTemplatePainted = useCallback(() => {
-    setTemplatePainted(true);
-  }, []);
-
-  useEffect(() => {
-    setBgResolved(false);
     setAtcSig("");
     fetch(`/api/admin/documents/marksheet?examId=${examId}`)
       .then((r) => r.json())
@@ -59,8 +45,7 @@ export default function AdminMarksheetPage() {
       .then((body) => {
         if (typeof body?.url === "string" && body.url.trim() !== "") setBg(body.url);
       })
-      .catch(() => setBg(""))
-      .finally(() => setBgResolved(true));
+      .catch(() => setBg(""));
 
     fetch("/api/public/settings?key=auth_signature")
       .then((r) => r.json())
@@ -81,8 +66,6 @@ export default function AdminMarksheetPage() {
   const downloadPdf = useCallback(async () => {
     const el = document.getElementById("cert-a4");
     if (!el || !data) return;
-    const needsDecodedBg = !(isPrintMode || isZipPrintMode) && !!bg;
-    if (!bgResolved || (needsDecodedBg && !templatePainted)) return;
     setDownloading(true);
     try {
       const studentObj = data?.studentId && typeof data.studentId === "object" ? data.studentId : null;
@@ -96,11 +79,10 @@ export default function AdminMarksheetPage() {
     } finally {
       setDownloading(false);
     }
-  }, [data, isPrintMode, isZipPrintMode, bg, templatePainted, bgResolved]);
+  }, [data, isPrintMode, isZipPrintMode]);
 
-  const needsTemplateDecode = !isPrintMode && !isZipPrintMode && !!bg;
-  const textOnTemplateReady = bgResolved && (!needsTemplateDecode || templatePainted);
-  const pdfReady = textOnTemplateReady;
+  const textOnTemplateReady = !!data;
+  const pdfReady = !!data;
 
   useEffect(() => {
     if (!data || !shouldDownload) return;
@@ -169,7 +151,7 @@ export default function AdminMarksheetPage() {
         className="relative mx-auto h-[297mm] w-[210mm] overflow-visible bg-white shadow-2xl print:m-0 print:shadow-none"
       >
         {showBg ? (
-          <DocumentTemplateBackground src={bg} onPainted={onTemplatePainted} />
+          <DocumentTemplateBackground src={bg} />
         ) : null}
         {textOnTemplateReady ? (
           <MarksheetBackgroundOverlay
