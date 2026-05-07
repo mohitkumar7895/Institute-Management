@@ -93,6 +93,21 @@ export async function downloadElementAsA4Pdf(
   const { w, h } = capturePixelSize(el);
   const cw = Math.max(1, Math.round(w * pixelRatio));
   const ch = Math.max(1, Math.round(h * pixelRatio));
+  const captureWithHtml2Canvas = async (): Promise<string> => {
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(el, {
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      allowTaint: false,
+      scale: Math.max(1, pixelRatio),
+      imageTimeout: 12000,
+      logging: false,
+      width: w,
+      height: h,
+    });
+    return canvas.toDataURL("image/jpeg", jpegQuality);
+  };
+
   const captureWithHtmlToImage = async (): Promise<string> =>
     toJpeg(el, {
       cacheBust: true,
@@ -112,28 +127,14 @@ export async function downloadElementAsA4Pdf(
       },
     });
 
-  const captureWithHtml2Canvas = async (): Promise<string> => {
-    const { default: html2canvas } = await import("html2canvas");
-    const canvas = await html2canvas(el, {
-      backgroundColor: "#ffffff",
-      useCORS: true,
-      allowTaint: false,
-      scale: Math.max(1, pixelRatio),
-      imageTimeout: 12000,
-      logging: false,
-      width: w,
-      height: h,
-    });
-    return canvas.toDataURL("image/jpeg", jpegQuality);
-  };
-
   let jpeg: string;
   try {
-    jpeg = await captureWithHtmlToImage();
-  } catch {
-    // Some production hosts intermittently fail foreignObject text rasterization;
-    // html2canvas is slower but more resilient for text-heavy certificates.
+    // Prefer html2canvas: it captures the already-rendered DOM, so production
+    // exports match what users see on screen (text + positioned overlays).
     jpeg = await captureWithHtml2Canvas();
+  } catch {
+    // Fallback path if canvas capture fails on specific browser/env combinations.
+    jpeg = await captureWithHtmlToImage();
   }
 
   const dims = ORIENTATION_TO_MM[orientation];
