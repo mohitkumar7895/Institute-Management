@@ -274,8 +274,28 @@ export default function MarksheetBackgroundOverlay({
   const nameCls =
     "absolute max-w-none truncate leading-none [font-size:10.25px] [text-transform:none] text-black [font-weight:800]";
 
+  /**
+   * Production / PDF capture: `html-to-image` clones into SVG foreignObject where
+   * Next.js `next/font` (Geist) is not available — inherited font stays "missing"
+   * and glyphs rasterize blank. Force web-safe fonts on the whole subtree.
+   */
+  const captureSafeCss = `
+    .document-overlay-print-root,
+    .document-overlay-print-root * {
+      font-family: Arial, Helvetica, sans-serif !important;
+    }
+    .document-overlay-print-root {
+      color: ${ink} !important;
+      -webkit-text-fill-color: ${ink} !important;
+    }
+  `;
+
   return (
-    <div className="pointer-events-none absolute inset-0 z-10" style={{ color: ink }}>
+    <div
+      className="document-overlay-print-root pointer-events-none absolute inset-0 z-[20]"
+      style={{ color: ink, fontFamily: "Arial, Helvetica, sans-serif" }}
+    >
+      <style dangerouslySetInnerHTML={{ __html: captureSafeCss }} />
       <div
         className="absolute overflow-hidden bg-white ring-1 ring-black/6"
         style={{ top: L.photo.top, left: L.photo.left, width: L.photo.w, height: L.photo.h }}

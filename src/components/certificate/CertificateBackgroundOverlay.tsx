@@ -157,8 +157,23 @@ export default function CertificateBackgroundOverlay({
   const gradeValueCls =
     "pointer-events-none absolute whitespace-nowrap text-center text-[14px] tabular-nums leading-none";
 
+  const captureSafeCss = `
+    .document-overlay-print-root,
+    .document-overlay-print-root * {
+      font-family: Arial, Helvetica, sans-serif !important;
+    }
+    .document-overlay-print-root {
+      color: ${ink} !important;
+      -webkit-text-fill-color: ${ink} !important;
+    }
+  `;
+
   return (
-    <div className="pointer-events-none absolute inset-0 z-10">
+    <div
+      className="document-overlay-print-root pointer-events-none absolute inset-0 z-[20]"
+      style={{ fontFamily: "Arial, Helvetica, sans-serif", color: ink }}
+    >
+      <style dangerouslySetInnerHTML={{ __html: captureSafeCss }} />
       <div className={photoFrameCls} style={{ top: L.photo.top, right: L.photo.right, width: L.photo.w, height: L.photo.h }}>
         {s?.photo ? (
           // eslint-disable-next-line @next/next/no-img-element
