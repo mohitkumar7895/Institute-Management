@@ -265,7 +265,6 @@ export default function MarksheetBackgroundOverlay({
     fontFamily: 'system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontWeight: 800,
     color: ink,
-    WebkitTextFillColor: ink,
   };
   const lineCls =
     "absolute max-w-none truncate uppercase leading-none [font-size:10.25px] text-black [font-weight:800]";
@@ -286,7 +285,6 @@ export default function MarksheetBackgroundOverlay({
     }
     .document-overlay-print-root {
       color: ${ink} !important;
-      -webkit-text-fill-color: ${ink} !important;
     }
   `;
 

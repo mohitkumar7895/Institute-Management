@@ -145,7 +145,6 @@ export default function CertificateBackgroundOverlay({
     fontFamily: 'system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontWeight: 800,
     color: ink,
-    WebkitTextFillColor: ink,
     letterSpacing: "0.02em",
   };
   const bodyCls =
@@ -164,7 +163,6 @@ export default function CertificateBackgroundOverlay({
     }
     .document-overlay-print-root {
       color: ${ink} !important;
-      -webkit-text-fill-color: ${ink} !important;
     }
   `;
 
