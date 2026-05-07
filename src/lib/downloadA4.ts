@@ -93,23 +93,48 @@ export async function downloadElementAsA4Pdf(
   const { w, h } = capturePixelSize(el);
   const cw = Math.max(1, Math.round(w * pixelRatio));
   const ch = Math.max(1, Math.round(h * pixelRatio));
-  const jpeg = await toJpeg(el, {
-    cacheBust: true,
-    pixelRatio,
-    quality: jpegQuality,
-    width: w,
-    height: h,
-    canvasWidth: cw,
-    canvasHeight: ch,
-    backgroundColor: "#ffffff",
-    // Avoid broken / cross-origin @font-face inlining on some hosts; overlay
-    // text uses explicit system font stacks so capture stays readable.
-    skipFonts: true,
-    style: {
-      transform: "none",
-      margin: "0",
-    },
-  });
+  const captureWithHtmlToImage = async (): Promise<string> =>
+    toJpeg(el, {
+      cacheBust: true,
+      pixelRatio,
+      quality: jpegQuality,
+      width: w,
+      height: h,
+      canvasWidth: cw,
+      canvasHeight: ch,
+      backgroundColor: "#ffffff",
+      // Avoid broken / cross-origin @font-face inlining on some hosts; overlay
+      // text uses explicit system font stacks so capture stays readable.
+      skipFonts: true,
+      style: {
+        transform: "none",
+        margin: "0",
+      },
+    });
+
+  const captureWithHtml2Canvas = async (): Promise<string> => {
+    const { default: html2canvas } = await import("html2canvas");
+    const canvas = await html2canvas(el, {
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      allowTaint: false,
+      scale: Math.max(1, pixelRatio),
+      imageTimeout: 12000,
+      logging: false,
+      width: w,
+      height: h,
+    });
+    return canvas.toDataURL("image/jpeg", jpegQuality);
+  };
+
+  let jpeg: string;
+  try {
+    jpeg = await captureWithHtmlToImage();
+  } catch {
+    // Some production hosts intermittently fail foreignObject text rasterization;
+    // html2canvas is slower but more resilient for text-heavy certificates.
+    jpeg = await captureWithHtml2Canvas();
+  }
 
   const dims = ORIENTATION_TO_MM[orientation];
   const pdf = new jsPDF({ orientation, unit: "mm", format: "a4" });
