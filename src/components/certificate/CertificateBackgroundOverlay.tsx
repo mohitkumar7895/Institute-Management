@@ -142,9 +142,10 @@ export default function CertificateBackgroundOverlay({
     : "";
 
   const valFont: CSSProperties = {
-    fontFamily: 'system-ui, "Segoe UI", Arial, sans-serif',
+    fontFamily: 'system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontWeight: 800,
     color: ink,
+    WebkitTextFillColor: ink,
     letterSpacing: "0.02em",
   };
   const bodyCls =

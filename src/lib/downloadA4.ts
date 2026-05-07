@@ -9,7 +9,8 @@
  *
  * This helper:
  *   1. Waits for every <img> inside the element to finish loading.
- *   2. Waits two animation frames so mm-based layout and fonts settle.
+ *   2. Waits for document.fonts, extra animation frames, and a short delay so
+ *      layout/fonts settle (production CDNs can be slower than localhost).
  *   3. Passes explicit width / height / canvasWidth / canvasHeight to
  *      html-to-image so the full A4 area is rasterised even when the element
  *      overflows the viewport.
@@ -48,10 +49,21 @@ async function waitForImages(el: HTMLElement, timeoutMs = 8000): Promise<void> {
   await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
 }
 
-/** Two frames so mm-based layout and webfonts settle before measuring for capture. */
-async function waitForLayout(): Promise<void> {
-  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+/**
+ * Extra settle time for production: `html-to-image` clones the DOM into an SVG
+ * foreignObject; webfonts and Tailwind must finish before capture or text can
+ * rasterize blank (localhost often wins due to cache / faster `_next` static).
+ */
+async function waitForFontsAndPaintSettle(): Promise<void> {
+  try {
+    await document.fonts?.ready;
+  } catch {
+    /* ignore */
+  }
+  for (let i = 0; i < 4; i++) {
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  }
+  await new Promise<void>((resolve) => setTimeout(resolve, 350));
 }
 
 function capturePixelSize(el: HTMLElement): { w: number; h: number } {
@@ -71,7 +83,7 @@ export async function downloadElementAsA4Pdf(
   jpegQuality = 0.82,
 ): Promise<void> {
   await waitForImages(el);
-  await waitForLayout();
+  await waitForFontsAndPaintSettle();
 
   const [{ toJpeg }, { default: jsPDF }] = await Promise.all([
     import("html-to-image"),
@@ -90,6 +102,9 @@ export async function downloadElementAsA4Pdf(
     canvasWidth: cw,
     canvasHeight: ch,
     backgroundColor: "#ffffff",
+    // Avoid broken / cross-origin @font-face inlining on some hosts; overlay
+    // text uses explicit system font stacks so capture stays readable.
+    skipFonts: true,
     style: {
       transform: "none",
       margin: "0",

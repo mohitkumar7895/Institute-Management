@@ -556,7 +556,7 @@ export default function ExamRequestManager({ atcId, role = "admin" }: { atcId?: 
         node.style.maxHeight = "297mm";
         node.style.aspectRatio = "210 / 297";
 
-        await new Promise((resolve) => window.setTimeout(resolve, 150));
+        await new Promise((resolve) => window.setTimeout(resolve, 350));
 
         const A4_W = 2480;
         const A4_H = 3508;
@@ -569,6 +569,7 @@ export default function ExamRequestManager({ atcId, role = "admin" }: { atcId?: 
           height: A4_H,
           canvasWidth: A4_W,
           canvasHeight: A4_H,
+          skipFonts: true,
         });
         document.body.removeChild(iframe);
 

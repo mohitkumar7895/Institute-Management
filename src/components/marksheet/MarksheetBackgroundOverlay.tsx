@@ -262,9 +262,10 @@ export default function MarksheetBackgroundOverlay({
 
   const ink = "#000000";
   const valFont: CSSProperties = {
-    fontFamily: 'system-ui, "Segoe UI", Arial, sans-serif',
+    fontFamily: 'system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif',
     fontWeight: 800,
     color: ink,
+    WebkitTextFillColor: ink,
   };
   const lineCls =
     "absolute max-w-none truncate uppercase leading-none [font-size:10.25px] text-black [font-weight:800]";
