@@ -28,8 +28,34 @@ export async function GET(request: Request) {
   await connectDB();
   try {
     const { StudentMedia } = await import("@/models/StudentMedia");
+    const { AtcStudent } = await import("@/models/Student");
+
+    const student = await AtcStudent.findById(studentId)
+      .select("photo studentSignature qualificationDoc highestQualDoc marksheet10th marksheet12th graduationDoc aadharDoc otherDocs")
+      .lean();
     const mediaItems = await StudentMedia.find({ studentId }).lean();
     const media: Record<string, string> = {};
+
+    // Keep backward compatibility with older rows where docs were saved directly in AtcStudent.
+    const studentDocKeys = [
+      "photo",
+      "studentSignature",
+      "qualificationDoc",
+      "highestQualDoc",
+      "marksheet10th",
+      "marksheet12th",
+      "graduationDoc",
+      "aadharDoc",
+      "otherDocs",
+    ] as const;
+
+    studentDocKeys.forEach((key) => {
+      const value = (student as Record<string, unknown> | null)?.[key];
+      if (typeof value === "string" && value.trim()) {
+        media[key] = value;
+      }
+    });
+
     mediaItems.forEach((item: any) => {
       media[item.fieldName] = item.content;
     });

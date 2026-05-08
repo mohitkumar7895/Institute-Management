@@ -317,6 +317,42 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
     return gradeFromMarksOrSubjectRows([], resultForm.marks, 100, resultGradeBands);
   }, [showResultModal, resultForm.marks, resultGradeBands]);
 
+  const openDocumentInNewTab = (rawUrl: string) => {
+    if (!rawUrl) return;
+    try {
+      const win = window.open("", "_blank");
+      if (!win) return;
+
+      let finalUrl = rawUrl;
+      let mime = "";
+
+      if (rawUrl.startsWith("data:")) {
+        const [meta, base64Part = ""] = rawUrl.split(",", 2);
+        const mimeMatch = meta.match(/^data:([^;]+);base64$/i) || meta.match(/^data:([^;]+);/i);
+        mime = mimeMatch?.[1] || "application/octet-stream";
+        const normalizedBase64 = base64Part.replace(/\s/g, "").replace(/-/g, "+").replace(/_/g, "/");
+        const binary = atob(normalizedBase64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+        finalUrl = URL.createObjectURL(new Blob([bytes], { type: mime }));
+        setTimeout(() => URL.revokeObjectURL(finalUrl), 120_000);
+      }
+
+      const lower = `${mime} ${finalUrl}`.toLowerCase();
+      const isPdf = lower.includes("application/pdf") || finalUrl.toLowerCase().endsWith(".pdf");
+      if (isPdf) {
+        win.document.open();
+        win.document.write(`<!doctype html><html><head><title>Document Preview</title><style>html,body,iframe{margin:0;padding:0;width:100%;height:100%;border:0;background:#0f172a;}</style></head><body><iframe src="${finalUrl}" title="Document Preview"></iframe></body></html>`);
+        win.document.close();
+      } else {
+        win.location.replace(finalUrl);
+      }
+    } catch {
+      const fallbackWin = window.open("", "_blank");
+      if (fallbackWin) fallbackWin.location.replace(rawUrl);
+    }
+  };
+
   const handleLookup = async () => {
     if (!lookupRegNo.trim()) return;
     setIsFetching(true);
@@ -2023,12 +2059,7 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
                                <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">{doc.label}</span>
                             </div>
                             <button 
-                              onClick={() => {
-                                const win = window.open();
-                                if (win) {
-                                  win.document.write(`<iframe src="${doc.data}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
-                                }
-                              }}
+                              onClick={() => openDocumentInNewTab(doc.data)}
                               className="px-4 py-2 bg-white text-blue-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-slate-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
                             >
                                View Full
