@@ -35,7 +35,7 @@ import {
   serializeGradeBandsJson,
   type GradeBand,
 } from "@/lib/marksheetGradeScaleCore";
-import { HIGHEST_QUALIFICATION_SELECT_OPTIONS } from "@/lib/qualificationOptions";
+import { HIGHEST_QUALIFICATION_SELECT_OPTIONS, formatQualSchoolDisplay } from "@/lib/qualificationOptions";
 import dynamic from "next/dynamic";
 import StudyMaterialManager from "@/components/admin/StudyMaterialManager";
 import WalletRequestManager from "@/components/admin/WalletRequestManager";

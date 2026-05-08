@@ -1,19 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { AtcStudent } from "@/models/Student";
-import { Settings } from "@/models/Settings";
 import { AtcUser } from "@/models/AtcUser";
 import { Course } from "@/models/Course";
 import { WalletTransaction } from "@/models/WalletTransaction";
 import { assignEnrollmentNoIfPending } from "@/lib/assignStudentEnrollmentNo";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-async function verifyAdmin(request: Request) {
+async function verifyAdmin() {
   const cookieStore = await cookies();
   const token = cookieStore.get("admin_token")?.value;
   if (!token) return null;
@@ -30,7 +29,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const admin = await verifyAdmin(request);
+    const admin = await verifyAdmin();
     if (!admin) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;
@@ -156,7 +155,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const admin = await verifyAdmin(request);
+    const admin = await verifyAdmin();
     if (!admin) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const { id } = await params;

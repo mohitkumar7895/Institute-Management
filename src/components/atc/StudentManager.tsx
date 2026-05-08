@@ -310,7 +310,7 @@ export default function StudentManager({ isDirectAdmission = false, initialFilte
     return () => {
       cancelled = true;
     };
-  }, [showResultModal?._id]);
+  }, [showResultModal]);
 
   const simpleOfflineResultGrade = useMemo(() => {
     if (!showResultModal) return { pct: 0, grade: "—" as string };
