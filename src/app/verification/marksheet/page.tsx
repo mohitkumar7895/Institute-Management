@@ -3,8 +3,10 @@
 import { useMemo, useState } from "react";
 import InternalPageLayout from "@/components/InternalPageLayout";
 import { Search, FileText, User, Calendar, BookOpen, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { ISO_DATE_MIN, isoDateToday, sanitizeIsoDateInput } from "@/lib/isoDate";
 
 export default function MarksheetVerification() {
+  const dobMax = useMemo(() => isoDateToday(), []);
   const [enrollment, setEnrollment] = useState("");
   const [dob, setDob] = useState("");
   const [loading, setLoading] = useState(false);

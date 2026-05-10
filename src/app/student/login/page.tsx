@@ -8,6 +8,7 @@ import { GraduationCap, Lock, User, ArrowRight, CheckCircle2, AlertCircle } from
 import { useBrand } from "@/context/BrandContext";
 
 export default function StudentLoginPage() {
+  const router = useRouter();
   const { brandName, brandLogo } = useBrand();
   const [isHydrated, setIsHydrated] = useState(false);
   const [loading, setLoading] = useState(false);
