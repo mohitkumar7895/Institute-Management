@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { AtcStudent } from "@/models/Student";
 import { AtcUser } from "@/models/AtcUser";
+import { AtcApplication } from "@/models/AtcApplication";
+import bcrypt from "bcryptjs";
 
 export const dynamic = 'force-dynamic';
 
@@ -86,9 +88,28 @@ export async function POST(request: Request) {
     await connectDB();
 
     // Find ATC center
-    const atc = await AtcUser.findOne({ tpCode: centerCode });
+    let atc = await AtcUser.findOne({ tpCode: centerCode });
+    
+    // Auto-recovery: If user missing but approved application exists, heal the state.
     if (!atc) {
-      return NextResponse.json({ message: "Invalid Study Center code selected." }, { status: 404 });
+      const app = await AtcApplication.findOne({ tpCode: centerCode, status: "approved" });
+      if (app) {
+        atc = await AtcUser.create({
+          tpCode: app.tpCode,
+          trainingPartnerName: app.trainingPartnerName,
+          email: String(app.email || "").toLowerCase().trim(),
+          mobile: app.mobile || "0000000000",
+          password: await bcrypt.hash(app.mobile || "0000000000", 10),
+          applicationId: app._id,
+          zones: (app as any).zones || [],
+          status: "active",
+        });
+        console.log(`[Self-Healing] Dynamically created missing AtcUser for application ${app._id} (tpCode: ${centerCode})`);
+      }
+    }
+
+    if (!atc) {
+      return NextResponse.json({ message: "Invalid Study Center code selected." }, { status: 400 });
     }
 
     // Process files
