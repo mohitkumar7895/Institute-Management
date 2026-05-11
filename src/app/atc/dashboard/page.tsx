@@ -36,6 +36,10 @@ const FeeManager = dynamic(() => import("@/components/common/FeeManager"), {
   loading: () => <div className="p-10 text-center font-bold text-slate-400">Loading Fee Manager...</div>,
   ssr: false 
 });
+const AtcReports = dynamic(() => import("@/components/atc/AtcReports"), { 
+  loading: () => <div className="p-10 text-center font-bold text-slate-400">Loading Reports...</div>,
+  ssr: false 
+});
 
 interface AtcUser {
   id: string;
@@ -460,6 +464,9 @@ export default function AtcDashboardPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Reports Component */}
+                  <AtcReports />
 
                 </div>
               )}
