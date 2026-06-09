@@ -4,7 +4,6 @@ import { jwtVerify } from "jose";
 function isPublicAdminApi(pathname: string): boolean {
   return (
     pathname === "/api/admin/login" ||
-    pathname === "/api/admin/register" ||
     pathname === "/api/admin/logout"
   );
 }
