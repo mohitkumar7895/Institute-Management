@@ -124,8 +124,14 @@ export default function AdminLoginPage() {
           </form>
 
 
-          <div className="mt-4 text-center">
-            <Link href="/" className="text-xs text-blue-300 hover:text-white transition">
+          <div className="mt-5 text-center space-y-2">
+            <p className="text-sm text-blue-200">
+              New admin?{" "}
+              <Link href="/admin/register" className="text-white font-semibold hover:underline">
+                Create Account
+              </Link>
+            </p>
+            <Link href="/" className="block text-xs text-blue-300 hover:text-white transition">
               ← Back to Website
             </Link>
           </div>

@@ -6,7 +6,11 @@ export function requiresStaffSession(pathname: string): boolean {
   if (pathname.startsWith("/student")) return false;
   if (pathname.startsWith("/verification")) return false;
 
-  if (pathname.startsWith("/admin/") && !pathname.startsWith("/admin/login")) {
+  if (
+    pathname.startsWith("/admin/") &&
+    !pathname.startsWith("/admin/login") &&
+    !pathname.startsWith("/admin/register")
+  ) {
     return true;
   }
   if (pathname.startsWith("/atc/") && !pathname.startsWith("/atc/login")) {
