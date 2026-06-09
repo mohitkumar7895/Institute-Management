@@ -42,14 +42,23 @@ export default function AdminRegisterPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: form.username,
-          email: form.email,
+          username: form.username.trim(),
+          email: form.email.trim().toLowerCase(),
           password: form.password,
         }),
       });
-      const data = await res.json();
+
+      let data: { message?: string; debug_info?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        setError("Invalid response from server.");
+        return;
+      }
+
       if (!res.ok) {
-        setError(data.message);
+        const detail = data.debug_info ? ` (${data.debug_info})` : "";
+        setError((data.message ?? "Registration failed.") + detail);
         return;
       }
 
