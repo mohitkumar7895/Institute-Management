@@ -24,7 +24,10 @@ export async function GET(request: Request) {
 
     await connectDB();
     const filter = categoryId ? { categoryId } : {};
-    const photos = await GalleryPhoto.find(filter).sort({ sortOrder: 1, createdAt: -1 }).lean();
+    const photos = await GalleryPhoto.find(filter)
+      .sort({ sortOrder: 1, createdAt: -1 })
+      .select("_id categoryId title type sortOrder createdAt")
+      .lean();
     return NextResponse.json({ photos });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Server error";

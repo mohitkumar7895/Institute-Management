@@ -25,7 +25,7 @@ interface Photo {
   _id: string;
   categoryId: string;
   title?: string;
-  image: string;
+  image?: string;
   type?: "image" | "video";
 }
 
