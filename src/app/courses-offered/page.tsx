@@ -4,8 +4,8 @@ import InternalPageLayout from "@/components/InternalPageLayout";
 export default function CoursesOfferedPage() {
   return (
     <InternalPageLayout
-      title="Courses"
-      breadcrumbs={[{ label: "Home", href: "/" }, { label: "Courses" }]}
+      title="Courses Offered"
+      breadcrumbs={[{ label: "Home", href: "/" }, { label: "Courses Offered" }]}
     >
       <CoursesOfferedContent />
     </InternalPageLayout>

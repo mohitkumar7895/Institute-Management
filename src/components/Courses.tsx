@@ -6,8 +6,8 @@ export default function Courses() {
   return (
     <SectionWrapper
       id="courses"
-      title="Courses Offered"
-      subtitle="Choose from industry-relevant courses designed for beginners and professionals."
+      title="Courses"
+      subtitle="Fashion, interior, glass design, skill development, seminars and more."
       className="bg-white"
     >
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">

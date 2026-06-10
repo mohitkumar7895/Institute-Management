@@ -43,6 +43,7 @@ import dynamic from "next/dynamic";
 import StudyMaterialManager from "@/components/admin/StudyMaterialManager";
 import WalletRequestManager from "@/components/admin/WalletRequestManager";
 import GalleryManager from "@/components/admin/GalleryManager";
+import TeamManager from "@/components/admin/TeamManager";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
 
 const FeeManager = dynamic(() => import("@/components/common/FeeManager"), { 
@@ -2612,6 +2613,8 @@ export default function AdminPanelPage() {
                     </div>
                   </div>
                 </div>
+
+                <TeamManager />
 
                 {/* Marksheet grade scale (percentage → letter) */}
                 <div className="md:col-span-2 bg-white rounded-4xl border border-slate-100 shadow-xl p-8 space-y-6">

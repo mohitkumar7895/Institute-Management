@@ -6,14 +6,26 @@ import {
   Monitor, GraduationCap, 
   Download, ListChecks, ArrowRight, ExternalLink
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { useBrand } from "@/context/BrandContext";
 
+type StudentSearchResult = {
+  student: {
+    name?: string;
+    enrollmentNo?: string;
+    course?: string;
+    createdAt?: string;
+    photo?: string;
+  };
+  examStatus?: string;
+};
+
 export default function StudentZonePage() {
   const { brandName, brandEmail } = useBrand();
   const [regNo, setRegNo] = useState("");
-  const [searchResult, setSearchResult] = useState<any>(null);
+  const [searchResult, setSearchResult] = useState<StudentSearchResult | null>(null);
   const [searching, setSearching] = useState(false);
 
   const handleQuickSearch = async () => {
@@ -29,7 +41,7 @@ export default function StudentZonePage() {
       } else {
         alert(data.message || "Student not found");
       }
-    } catch (err) {
+    } catch {
       alert("Error searching student details");
     } finally {
       setSearching(false);
@@ -39,7 +51,7 @@ export default function StudentZonePage() {
   const zones = [
     {
       title: "Registration Process",
-      desc: "Detailed guide on how to register for our professional computer courses.",
+      desc: "Detailed guide on how to register for our professional training courses.",
       icon: ListChecks,
       link: "/admission",
       color: "bg-blue-500",
@@ -133,9 +145,9 @@ export default function StudentZonePage() {
           <div className="bg-white rounded-[3rem] shadow-2xl border border-slate-100 p-8 md:p-12 animate-in slide-in-from-bottom-10 fade-in duration-500">
              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-50 pb-8 mb-8">
                 <div className="flex items-center gap-6">
-                   <div className="w-24 h-24 bg-blue-50 rounded-[2rem] flex items-center justify-center border-2 border-white shadow-lg overflow-hidden shrink-0">
+                   <div className="relative w-24 h-24 bg-blue-50 rounded-[2rem] flex items-center justify-center border-2 border-white shadow-lg overflow-hidden shrink-0">
                       {searchResult.student?.photo ? (
-                        <img src={searchResult.student.photo} alt="Student" className="w-full h-full object-cover" />
+                        <Image src={searchResult.student.photo} alt="Student" fill unoptimized className="object-cover" />
                       ) : (
                         <UserPlus className="text-blue-600 w-10 h-10" />
                       )}
@@ -158,7 +170,11 @@ export default function StudentZonePage() {
                 </div>
                 <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100/50">
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Admission Date</p>
-                   <p className="text-lg font-black text-slate-700">{new Date(searchResult.student?.createdAt).toLocaleDateString()}</p>
+                   <p className="text-lg font-black text-slate-700">
+                     {searchResult.student?.createdAt
+                       ? new Date(searchResult.student.createdAt).toLocaleDateString()
+                       : "—"}
+                   </p>
                 </div>
                 <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100/50">
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Exam Status</p>

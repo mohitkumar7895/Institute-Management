@@ -1,7 +1,43 @@
+"use client";
+
 import Image from "next/image";
-import { teamMembers } from "@/data/team";
+import { useEffect, useState } from "react";
+import { teamMembers as fallbackTeam } from "@/data/team";
+
+type TeamMember = {
+  _id?: string;
+  name: string;
+  role: string;
+  description: string;
+  image: string;
+};
 
 export default function Team() {
+  const [members, setMembers] = useState<TeamMember[]>(
+    fallbackTeam.map((member) => ({
+      name: member.name,
+      role: member.role,
+      description: member.description,
+      image: member.image,
+    })),
+  );
+
+  useEffect(() => {
+    async function fetchTeam() {
+      try {
+        const res = await fetch("/api/public/team");
+        if (!res.ok) return;
+        const data = (await res.json()) as TeamMember[];
+        if (Array.isArray(data) && data.length > 0) {
+          setMembers(data);
+        }
+      } catch {
+        /* keep fallback */
+      }
+    }
+    void fetchTeam();
+  }, []);
+
   return (
     <section id="team" className="scroll-mt-28 bg-white px-4 py-12 sm:scroll-mt-32 sm:px-6 sm:py-14 lg:px-8">
       <div className="mx-auto w-full max-w-6xl">
@@ -13,14 +49,18 @@ export default function Team() {
         </div>
 
         <div className="mt-10 grid gap-x-5 gap-y-8 sm:grid-cols-2 xl:grid-cols-4">
-          {teamMembers.map((member) => (
-            <article key={member.name} className="text-center text-slate-700">
+          {members.map((member) => (
+            <article
+              key={member._id ?? member.name}
+              className="text-center text-slate-700"
+            >
               <div className="mx-auto w-full max-w-52 overflow-hidden bg-slate-100">
                 <div className="relative aspect-4/5 w-full">
                   <Image
-                    src={member.image}
+                    src={member.image || "/team-placeholder.svg"}
                     alt={member.name}
                     fill
+                    unoptimized
                     className="object-cover"
                     sizes="(max-width: 640px) 280px, (max-width: 1280px) 45vw, 22vw"
                   />

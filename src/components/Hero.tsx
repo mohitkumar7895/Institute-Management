@@ -66,11 +66,11 @@ export default function Hero() {
             Career-focused training programs
           </p>
           <h1 className="text-3xl font-black leading-tight sm:text-4xl lg:text-[2.75rem] uppercase">
-            Upgrade Your Skills With Practical IT Courses
+            Upgrade Your Skills With Professional Training Programs
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-slate-100 sm:text-base sm:leading-8">
-            Join expert-led classes in accounting, design, and programming. Learn
-            by doing and become job-ready with project-based training.
+            Fashion designing, interior designing, glass design, leather goods,
+            skill development, seminars and S-IFT programs under SGEFTT, Govt of India.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link

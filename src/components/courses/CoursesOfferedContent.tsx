@@ -97,7 +97,7 @@ export default function CoursesOfferedContent() {
             ) : courses.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
-                  No courses available at the moment.
+                  No courses added yet. Admin will publish courses here.
                 </td>
               </tr>
             ) : (
