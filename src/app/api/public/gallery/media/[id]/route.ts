@@ -6,6 +6,10 @@ import { parseDataUrl } from "@/lib/galleryMedia";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+function toResponseBody(buffer: Buffer): Uint8Array {
+  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -41,7 +45,7 @@ export async function GET(
       }
 
       const chunk = buffer.subarray(start, end + 1);
-      return new NextResponse(chunk, {
+      return new NextResponse(toResponseBody(chunk), {
         status: 206,
         headers: {
           "Content-Type": contentType,
@@ -53,7 +57,7 @@ export async function GET(
       });
     }
 
-    return new NextResponse(buffer, {
+    return new NextResponse(toResponseBody(buffer), {
       headers: {
         "Content-Type": contentType,
         "Content-Length": String(total),
