@@ -259,92 +259,84 @@ export default function GalleryManager() {
         </div>
       )}
 
-      <div className="flex min-h-[560px] flex-col lg:flex-row">
-        {/* ── LEFT: Categories ── */}
-        <aside className="w-full border-b border-slate-200 bg-linear-to-b from-[#0a0a2e] to-[#0d1554] lg:w-[300px] lg:border-b-0 lg:border-r">
-          <div className="border-b border-white/10 px-5 py-5">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                <FolderOpen className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">Categories</h3>
-                <p className="text-[11px] text-blue-200">{categories.length} album{categories.length !== 1 ? "s" : ""}</p>
-              </div>
-            </div>
+      {/* Categories — top bar + list below */}
+      <div className="border-b border-slate-200 bg-linear-to-r from-[#0a0a2e] to-[#0d1554] px-6 py-5">
+        <div className="mb-4 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+            <FolderOpen className="h-5 w-5 text-white" />
           </div>
-
-          <div className="p-4">
-            <form onSubmit={handleAddCategory} className="space-y-2">
-              <input
-                type="text"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="e.g. Annual Function"
-                className="w-full rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-sm text-white placeholder-blue-300/50 outline-none focus:border-white/30 focus:bg-white/15"
-              />
-              <button
-                type="submit"
-                disabled={savingCategory}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-sm font-bold text-[#0a0aa1] transition hover:bg-blue-50 disabled:opacity-60"
-              >
-                {savingCategory ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Plus className="h-4 w-4" />
-                )}
-                Add Category
-              </button>
-            </form>
+          <div>
+            <h3 className="text-sm font-bold text-white">Categories</h3>
+            <p className="text-[11px] text-blue-200">{categories.length} album{categories.length !== 1 ? "s" : ""}</p>
           </div>
+        </div>
 
-          <div className="space-y-1.5 px-4 pb-4">
-            {categories.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-white/20 bg-white/5 px-4 py-10 text-center">
-                <FolderOpen className="mx-auto mb-3 h-10 w-10 text-white/30" />
-                <p className="text-sm font-semibold text-white/70">No categories</p>
-                <p className="mt-1 text-xs text-blue-200/60">Add one above</p>
-              </div>
-            ) : (
-              categories.map((cat) => {
-                const active = selectedCategoryId === cat._id;
-                const count = photoCountMap[cat._id] ?? 0;
-                return (
-                  <div key={cat._id} className="flex items-center gap-1">
-                    <button
-                      type="button"
-                      onClick={() => void handleSelectCategory(cat._id)}
-                      className={`flex flex-1 items-center justify-between rounded-xl px-3.5 py-3 text-left transition ${
-                        active
-                          ? "bg-white text-[#0a0aa1] shadow-md"
-                          : "bg-white/10 text-white hover:bg-white/20"
+        <form onSubmit={handleAddCategory} className="flex flex-col gap-2 sm:flex-row">
+          <input
+            type="text"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            placeholder="Category name — e.g. Annual Function"
+            className="flex-1 rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 text-sm text-white placeholder-blue-300/50 outline-none focus:border-white/30 focus:bg-white/15"
+          />
+          <button
+            type="submit"
+            disabled={savingCategory}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#0a0aa1] transition hover:bg-blue-50 disabled:opacity-60"
+          >
+            {savingCategory ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+            Add Category
+          </button>
+        </form>
+
+        {categories.length === 0 ? (
+          <p className="mt-4 text-sm text-blue-200/70">No categories yet — add one above.</p>
+        ) : (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {categories.map((cat) => {
+              const active = selectedCategoryId === cat._id;
+              const count = photoCountMap[cat._id] ?? 0;
+              return (
+                <div
+                  key={cat._id}
+                  className={`inline-flex items-center gap-1 rounded-xl border transition ${
+                    active
+                      ? "border-white bg-white text-[#0a0aa1] shadow-md"
+                      : "border-white/20 bg-white/10 text-white hover:bg-white/20"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => void handleSelectCategory(cat._id)}
+                    className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold"
+                  >
+                    {cat.name}
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        active ? "bg-blue-100 text-blue-700" : "bg-white/15 text-blue-100"
                       }`}
                     >
-                      <span className="truncate text-sm font-semibold">{cat.name}</span>
-                      <span
-                        className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          active ? "bg-blue-100 text-blue-700" : "bg-white/15 text-blue-100"
-                        }`}
-                      >
-                        {count}
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void handleDeleteCategory(cat._id)}
-                      className="rounded-xl p-2.5 text-red-300 transition hover:bg-red-500/20 hover:text-red-200"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                );
-              })
-            )}
+                      {count}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleDeleteCategory(cat._id)}
+                    className={`mr-1 rounded-lg p-1.5 transition ${
+                      active ? "text-red-500 hover:bg-red-50" : "text-red-300 hover:bg-red-500/20"
+                    }`}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        </aside>
+        )}
+      </div>
 
-        {/* ── RIGHT: Photos ── */}
-        <section className="flex flex-1 flex-col bg-slate-50">
+      {/* Photos — full width below */}
+      <section className="flex flex-col bg-slate-50">
           <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
@@ -357,7 +349,7 @@ export default function GalleryManager() {
                 <p className="text-xs text-slate-500">
                   {selectedCategory
                     ? `${photos.length} item${photos.length !== 1 ? "s" : ""}`
-                    : "Pick a category from left"}
+                    : "Pick a category above"}
                 </p>
               </div>
             </div>
@@ -384,7 +376,7 @@ export default function GalleryManager() {
                   <FolderOpen className="h-10 w-10 text-slate-300" />
                 </div>
                 <p className="text-base font-bold text-slate-600">Select a category</p>
-                <p className="mt-1 text-sm text-slate-400">Choose from the left panel</p>
+                <p className="mt-1 text-sm text-slate-400">Choose from categories above</p>
               </div>
             ) : photosLoading ? (
               <div className="flex min-h-[400px] items-center justify-center">
@@ -477,8 +469,7 @@ export default function GalleryManager() {
               </div>
             )}
           </div>
-        </section>
-      </div>
+      </section>
     </div>
   );
 }
