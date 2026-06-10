@@ -7,7 +7,7 @@ import { GalleryCategory } from "@/models/GalleryCategory";
 export const dynamic = "force-dynamic";
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
-const MAX_VIDEO_BYTES = 4 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 10 * 1024 * 1024;
 
 function approxBase64Bytes(dataUrl: string): number {
   const base64Part = dataUrl.split(",")[1] ?? "";
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Only video files are allowed." }, { status: 400 });
       }
       if (approxBase64Bytes(image) > MAX_VIDEO_BYTES) {
-        return NextResponse.json({ message: "Video must be under 4 MB." }, { status: 400 });
+        return NextResponse.json({ message: "Video must be under 10 MB." }, { status: 400 });
       }
     } else {
       if (!image.startsWith("data:image/")) {

@@ -39,8 +39,26 @@ export default function GalleryManager() {
   const [photosLoading, setPhotosLoading] = useState(false);
   const [savingCategory, setSavingCategory] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  const readFileAsDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result ?? ""));
+      reader.onerror = () => reject(new Error("Read failed"));
+      reader.readAsDataURL(file);
+    });
+
+  const validateMediaFile = (file: File): string | null => {
+    const isVideo = file.type.startsWith("video/");
+    const isImage = file.type.startsWith("image/");
+    if (!isVideo && !isImage) return "invalid type";
+    if (isImage && file.size > 2 * 1024 * 1024) return "image over 2 MB";
+    if (isVideo && file.size > 10 * 1024 * 1024) return "video over 10 MB";
+    return null;
+  };
 
   const photoCountMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -168,51 +186,53 @@ export default function GalleryManager() {
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files ?? []);
     e.target.value = "";
-    if (!file || !selectedCategoryId) return;
-
-    const isVideo = file.type.startsWith("video/");
-    const isImage = file.type.startsWith("image/");
-
-    if (!isVideo && !isImage) {
-      setError("Only image or video files allowed.");
-      return;
-    }
-    if (isImage && file.size > 2 * 1024 * 1024) {
-      setError("Image max 2 MB.");
-      return;
-    }
-    if (isVideo && file.size > 4 * 1024 * 1024) {
-      setError("Video max 4 MB.");
-      return;
-    }
+    if (!files.length || !selectedCategoryId) return;
 
     setUploading(true);
     setError(null);
-    try {
-      const image = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result ?? ""));
-        reader.onerror = () => reject(new Error("Read failed"));
-        reader.readAsDataURL(file);
-      });
+    setUploadProgress({ done: 0, total: files.length });
 
-      const res = await apiFetch("/api/admin/gallery/photos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          categoryId: selectedCategoryId,
-          image,
-          type: isVideo ? "video" : "image",
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.message ?? "Upload failed.");
-        return;
+    const failed: string[] = [];
+    let uploaded = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      setUploadProgress({ done: i, total: files.length });
+
+      const validationError = validateMediaFile(file);
+      if (validationError) {
+        failed.push(`${file.name} (${validationError})`);
+        continue;
       }
 
+      try {
+        const image = await readFileAsDataUrl(file);
+        const isVideo = file.type.startsWith("video/");
+        const res = await apiFetch("/api/admin/gallery/photos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            categoryId: selectedCategoryId,
+            image,
+            type: isVideo ? "video" : "image",
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          failed.push(`${file.name} (${data.message ?? "failed"})`);
+        } else {
+          uploaded += 1;
+        }
+      } catch {
+        failed.push(`${file.name} (upload error)`);
+      }
+    }
+
+    setUploadProgress({ done: files.length, total: files.length });
+
+    try {
       const [categoryPhotos, every] = await Promise.all([
         fetchPhotos(selectedCategoryId),
         refreshAllPhotos(),
@@ -220,10 +240,15 @@ export default function GalleryManager() {
       setPhotos(categoryPhotos);
       setAllPhotos(every);
     } catch {
-      setError("Upload failed.");
-    } finally {
-      setUploading(false);
+      setError("Upload done but refresh failed.");
     }
+
+    if (failed.length > 0) {
+      setError(`${uploaded}/${files.length} uploaded. Failed: ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "..." : ""}`);
+    }
+
+    setUploading(false);
+    setUploadProgress(null);
   };
 
   const handleDeletePhoto = async (id: string) => {
@@ -357,9 +382,12 @@ export default function GalleryManager() {
             {selectedCategoryId && (
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0a0aa1] px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-800">
                 {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-                Upload Photo / Video
+                {uploading && uploadProgress
+                  ? `Uploading ${uploadProgress.done}/${uploadProgress.total}...`
+                  : "Upload Photos / Videos"}
                 <input
                   type="file"
+                  multiple
                   accept="image/*,video/mp4,video/webm,video/quicktime"
                   className="hidden"
                   onChange={handleUpload}
@@ -392,9 +420,10 @@ export default function GalleryManager() {
                   </div>
                 )}
                 <p className="text-base font-bold text-slate-700">No media yet</p>
-                <p className="mt-1 text-sm text-slate-500">Photo or video upload karein</p>
+                <p className="mt-1 text-sm text-slate-500">Ek saath multiple photos/videos select karein</p>
                 <input
                   type="file"
+                  multiple
                   accept="image/*,video/mp4,video/webm,video/quicktime"
                   className="hidden"
                   onChange={handleUpload}
@@ -460,6 +489,7 @@ export default function GalleryManager() {
                   )}
                   <input
                     type="file"
+                    multiple
                     accept="image/*,video/mp4,video/webm,video/quicktime"
                     className="hidden"
                     onChange={handleUpload}
