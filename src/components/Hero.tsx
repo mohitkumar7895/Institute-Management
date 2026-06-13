@@ -65,12 +65,11 @@ export default function Hero() {
           <p className="inline-block rounded-full bg-white/12 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
             Career-focused training programs
           </p>
-          <h1 className="text-3xl font-black leading-tight sm:text-4xl lg:text-[2.75rem] uppercase">
-            Upgrade Your Skills With Professional Training Programs
+          <h1 className="max-w-2xl text-2xl font-black leading-tight sm:text-3xl lg:text-4xl uppercase">
+            Upgrade Your Skills development and industries development Institute training Program.
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-slate-100 sm:text-base sm:leading-8">
-            Fashion designing, interior designing, glass design, leather goods,
-            skill development, seminars and S-IFT programs under SGEFTT, Govt of India.
+            Fashion designing, interior designing, glass design, leather goods, SIFT skill development by SGEFTT Ragister by governor of india.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link

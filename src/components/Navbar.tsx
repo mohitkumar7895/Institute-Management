@@ -143,60 +143,76 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="bg-white">
-        <div className="mx-auto flex w-full max-w-330 flex-wrap items-center justify-between gap-5 px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" onClick={handleNavClick("/")} className="shrink-0 flex items-center gap-3 group">
+      <div className="border-b border-slate-100 bg-white">
+        <div className="mx-auto flex w-full max-w-330 flex-nowrap items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 lg:gap-6 lg:px-8">
+          <Link href="/" onClick={handleNavClick("/")} className="group flex min-w-0 flex-1 items-center gap-3.5 sm:gap-4">
             {brandLogo ? (
               <img
                 src={brandLogo}
                 alt={brandName}
-                className="h-auto w-14 xs:w-18 sm:w-24 lg:w-28 object-contain max-h-[96px]"
+                className="h-auto w-28 shrink-0 object-contain xs:w-32 sm:w-40 lg:w-48 max-h-[145px]"
               />
             ) : (
               <Image
                 src="/ygroup-logo.svg"
                 alt={brandName}
-                width={260}
-                height={110}
-                className="h-auto w-32 xs:w-38 sm:w-46 lg:w-52"
+                width={400}
+                height={168}
+                className="h-auto w-44 shrink-0 object-contain xs:w-48 sm:w-56 lg:w-64"
                 priority
               />
             )}
-            <div className="flex flex-col">
-              <span className="text-lg sm:text-2xl font-black text-[#0a0aa1] uppercase leading-none tracking-tighter">
+            <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
+              <span className="text-base font-black uppercase leading-none tracking-tight text-[#0a0aa1] sm:text-lg lg:text-xl">
                 {brandName}
               </span>
-              <span className="text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">
-                Professional Education
-              </span>
+              <div className="space-y-0.5 border-l-2 border-[#0a0aa1]/20 pl-2 sm:pl-2.5">
+                <p className="text-[10px] font-bold uppercase leading-snug tracking-wide text-[#0a0aa1]/90 sm:text-[11px] lg:text-xs">
+                  SIFT Skill Development Institute
+                </p>
+                <p className="max-w-[220px] text-[9px] font-medium leading-snug text-slate-600 sm:max-w-xs sm:text-[10px] lg:max-w-sm lg:text-[11px]">
+                  Undertaken by Sunil Group of Education Fashion and Technology Trust
+                </p>
+              </div>
             </div>
           </Link>
 
-          <div className="hidden items-center gap-6 md:flex">
-            <div className="inline-flex items-center gap-3 text-sm text-slate-700">
-              <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-[#0a0aa1] text-white">
-                <Mail className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-slate-900">Email Us</p>
-                <p className="text-sm leading-none text-slate-800 lg:text-base">{brandEmail || "Not available"}</p>
-              </div>
-            </div>
-            <div className="inline-flex items-center gap-3 text-sm text-slate-700">
-              <span className="flex h-9 w-9 items-center justify-center rounded-sm bg-white text-[#0a0aa1] ring-1 ring-slate-200">
-                <Phone className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-slate-900">Call Us</p>
-                <p className="text-sm leading-none text-slate-800 lg:text-base">{brandMobile || "Not available"}</p>
-              </div>
+          <div className="hidden shrink-0 items-center md:flex">
+            <div className="flex items-center gap-4 border-l border-slate-200 pl-4 lg:gap-6 lg:pl-6">
+              <a
+                href={brandEmail ? `mailto:${brandEmail}` : undefined}
+                className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandEmail ? "hover:opacity-80" : "pointer-events-none"}`}
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#0a0aa1] text-white shadow-sm">
+                  <Mail className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Email Us</p>
+                  <p className="truncate text-xs font-semibold text-slate-800 lg:text-sm">{brandEmail || "Not available"}</p>
+                </div>
+              </a>
+
+              <div className="hidden h-10 w-px bg-slate-200 lg:block" aria-hidden="true" />
+
+              <a
+                href={brandMobile ? `tel:${brandMobile.replace(/\s/g, "")}` : undefined}
+                className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandMobile ? "hover:opacity-80" : "pointer-events-none"}`}
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-[#0a0aa1] shadow-sm ring-1 ring-slate-200">
+                  <Phone className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Call Us</p>
+                  <p className="whitespace-nowrap text-xs font-semibold text-slate-800 lg:text-sm">{brandMobile || "Not available"}</p>
+                </div>
+              </a>
             </div>
           </div>
 
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen((open) => !open)}
-            className="inline-flex items-center justify-center rounded-md border border-slate-200 p-2 text-slate-700 transition hover:bg-slate-100 md:hidden"
+            className="inline-flex shrink-0 items-center justify-center rounded-md border border-slate-200 p-2 text-slate-700 transition hover:bg-slate-100 md:hidden"
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-nav"
             aria-label="Toggle navigation menu"
@@ -206,16 +222,32 @@ export default function Navbar() {
         </div>
 
         {isMobileMenuOpen ? (
-          <div className="border-t border-slate-200 px-4 py-4 md:hidden sm:px-6">
-            <div className="space-y-3 text-sm text-slate-700">
-              <div className="rounded-xl bg-slate-50 px-4 py-3">
-                <p className="font-semibold text-slate-900">Email Us</p>
-                <p>{brandEmail || "Not available"}</p>
-              </div>
-              <div className="rounded-xl bg-slate-50 px-4 py-3">
-                <p className="font-semibold text-slate-900">Call Us</p>
-                <p>{brandMobile || "Not available"}</p>
-              </div>
+          <div className="border-t border-slate-100 px-4 py-3 md:hidden sm:px-6">
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+              <a
+                href={brandEmail ? `mailto:${brandEmail}` : undefined}
+                className={`flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5 ${brandEmail ? "" : "pointer-events-none"}`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#0a0aa1] text-white">
+                  <Mail className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Email Us</p>
+                  <p className="truncate text-xs font-semibold text-slate-800">{brandEmail || "Not available"}</p>
+                </div>
+              </a>
+              <a
+                href={brandMobile ? `tel:${brandMobile.replace(/\s/g, "")}` : undefined}
+                className={`flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5 ${brandMobile ? "" : "pointer-events-none"}`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[#0a0aa1] ring-1 ring-slate-200">
+                  <Phone className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Call Us</p>
+                  <p className="text-xs font-semibold text-slate-800">{brandMobile || "Not available"}</p>
+                </div>
+              </a>
             </div>
           </div>
         ) : null}
