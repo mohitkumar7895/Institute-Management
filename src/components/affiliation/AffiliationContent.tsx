@@ -1,13 +1,16 @@
 import { getBrandName } from "@/lib/settings";
 
 const minimumRequirements = [
-  "3 Computers",
-  "200 sq/ft Covered Area",
+  "5 Computers",
+  "5 Silai Machines",
+  "IT Labs",
+  "300 Sq. Ft. Area with 3 Rooms",
+  "Office",
+  "Reception",
+  "CCTV",
   "Internet Connection",
   "Printer & Scanner",
-  "Well Educated Faculty",
   "White Board & Notice Board",
-  "First Aid Kit",
   "Drinking Water",
   "Washroom",
   "Library",
