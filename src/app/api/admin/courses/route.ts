@@ -35,8 +35,13 @@ export async function GET(req: Request) {
     if (!isAdmin) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     await connectDB();
-    const courses = await Course.find().sort({ createdAt: -1 });
-    return NextResponse.json(courses);
+    const courses = await Course.find().sort({ createdAt: -1 }).lean();
+    const safe = courses.map((course) => {
+      const hasPdf = Boolean(course.pdf?.trim());
+      const { pdf: _pdf, ...rest } = course;
+      return { ...rest, hasPdf };
+    });
+    return NextResponse.json(safe);
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -51,6 +56,10 @@ export async function POST(req: Request) {
     const {
       name,
       shortName,
+      description,
+      image,
+      pdf,
+      pdfFileName,
       durationMonths,
       registrationFee,
       zone,
@@ -75,6 +84,10 @@ export async function POST(req: Request) {
     const course = await Course.create({
       name,
       shortName,
+      description: typeof description === "string" ? description.trim() : "",
+      image: typeof image === "string" ? image.trim() : "",
+      pdf: typeof pdf === "string" ? pdf.trim() : "",
+      pdfFileName: typeof pdfFileName === "string" ? pdfFileName.trim() : "",
       durationMonths,
       registrationFee: Number(registrationFee),
       zone,

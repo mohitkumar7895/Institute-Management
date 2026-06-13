@@ -19,6 +19,10 @@ export interface ICourse {
   _id: mongoose.Types.ObjectId;
   name: string;
   shortName: string;
+  description?: string;
+  image?: string;
+  pdf?: string;
+  pdfFileName?: string;
   durationMonths: number;
   registrationFee: number;
   courseFee: number;
@@ -44,6 +48,10 @@ const CourseSchema = new Schema<ICourse>(
   {
     name: { type: String, required: true },
     shortName: { type: String, required: true },
+    description: { type: String, default: "" },
+    image: { type: String, default: "" },
+    pdf: { type: String, default: "" },
+    pdfFileName: { type: String, default: "" },
     durationMonths: { type: Number, required: true },
     registrationFee: { type: Number, required: true, min: 0, default: 0 },
     courseFee: { type: Number, required: true, min: 0, default: 0 },

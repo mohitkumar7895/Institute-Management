@@ -36,43 +36,25 @@ export default function DirectorMessagePage() {
             <h2 className="text-2xl font-extrabold text-slate-900">Introduction</h2>
             <div className="mt-4 space-y-4 text-sm leading-8 sm:text-base sm:leading-9">
               <p>
-                The need to provide skill/vocational training is of pressing concern in the wake of rapid
-                economic development and change on account of the scientific and technological advancement
-                taking place in the country. There is no justification for continuation of a system of
-                general education that is divorced from the socioeconomic needs of the communities.
-                Vocationalisation of education is a need to be seen as a strategy to provide a full package
-                of competence required for wage and self employment.
+              In the Context of rapid education and economic development it is felt that the general education system is not adequate to meet the growing demands for growing diversifying economy . It is generally felt that, there is much need for growing children to have better systematic education by proper trained teacher that is why teacher Vocational training should be seen as not merely it terms creating positive attitude towards work and general increase in the skill base, among the student but also as a strategy for giving a full package of Competence, required for giving, required for wage and self employment, to meet the man-power, needs on various sectors.
               </p>
             </div>
           </div>
 
           <div>
             <h3 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
-              Sunil Group of Education Fashion and Technology Trust (All India)
+              Sunil Group of Education Fashion and Technology Trust (All India )
             </h3>
             <div className="mt-4 space-y-4 text-sm leading-8 sm:text-base sm:leading-9">
               <p>
-                The group covers various programmes including Electricians, Mobile Repairing, AC Repairing,
-                Solar Panel Installation, Leather Stitching Operator, Fashion Designing, Khadi Product,
-                Interior Designing, Makeup Artist, Beautician, Computer Education, Leather Goods Product,
-                Shoes Making, Jute Handicraft, Glass Designing, Glass Art, other skill development courses,
-                SC/ST entrepreneur support, skill development, industrial grievance resolution, vendor
-                development programmes, government schemes awareness, trade fairs &amp; exhibitions,
-                industrial development programmes, training &amp; awareness, MDP-ESDP training programme,
-                government liaison, vendor development and more all over India to train unemployed girls and
-                boys, especially those belonging to scheduled castes and scheduled tribes.
+             Sunil Group of Education Fashion and Technology Trust (All India ) Organization started Electricians, Mobile repairing, AC repairing, Sollar pannal stolation, leather stitching operator,Fashion Designing, Khadi product,Interior Designing, Makeup Artist,Beautician, Computer Education,Lether Good product, Shoes Making, Juet handicraft, Glass Designing,Glass Art and Other skill development Course and SC,ST entrepreneur support, Skill development, industrial grievance resolution, Vendor development programs,Government scheme awareness,Trade fairs & exhibitions Industrial development, Training & awareness,MDP-ESDP Training program, Government liaison, Vendor development. Course all over India, with the help & co-operation of educational experts and Successful entrepreneur with a view of train unemployed educated girls & Boys, particularly the girls & Boys  of Scheduled Caste 
               </p>
               <p className="font-medium text-slate-700">
-                सुनिल ग्रुप ऑफ एजुकेशन फैशन एंड टेक्नोलॉजी ट्रस्ट (ऑल इंडिया) भारत भर में बेरोज़गार
-                युवाओं, विशेष रूप से अनुसूचित जाति व अनुसूचित जनजाति के युवाओं को ग्लास डिज़ाइनिंग,
-                बंगल्स डिज़ाइनिंग, गारमेंट्स मैन्युफैक्चरिंग, फैशन डिजाइनिंग, इंटीरियर डिजाइनिंग,
-                कंप्यूटर एजुकेशन, हार्डवेयर नेटवर्किंग, लेदर गुड्स, जूट प्रोडक्ट्स, शू मेकिंग,
-                हैंडीक्राफ्ट्स आदि विभिन्न व्यावसायिक एवं कौशल विकास कार्यक्रमों के माध्यम से प्रशिक्षित
-                कर उन्हें स्वावलंबी एवं उद्यमी बनाने हेतु प्रतिबद्ध है। हमारा उद्देश्य पुरुषों और
-                महिलाओं को सफल उद्यमी बनाकर समाज को एक नई दिशा देना है।
+                हमारा उद्देश्य समाज को विभिन्न ट्रेड जैसे  ग्लास डिजाइनिंग, बैंगल्स डिजाइनिंग, गारमेंट्स मैन्युफैक्चरिंग, फैशन डिजाइनिंग, इंटीरियर डिजाइनिंग, कंप्यूटर एजुकेशन, कंप्यूटर हार्डवेयर नेटवर्किंग, लेदर गुड्स प्रोडक्ट, जुट प्रोडक्ट, शूज मेकिंग, हैंडीक्राफ्ट, इंडस्टरीज डेवलपमेंट प्रोग्राम, इंडस्ट्रीज अवेयरनेस प्रोग्राम, इंडस्ट्रीज ट्रेनिंग सेमिनार आदि कराकर समाज  के छात्र एवं छात्राओं महिला एवं पुरुषों को इस तरीके से ट्रेनिंग के साथ तैयार किया जाए कि उनमें से एक अच्छा उद्यमी निकालकर आए अपने उद्यम को लगाए अपना स्वरोजगार स्थापित करें और समाज को एक नई दिशा दें एक पहचान दे और बहुत से लोगों को स्वरोजगार दे 
               </p>
-              <p className="font-semibold text-slate-800">आपके उज्ज्वल भविष्य की शुभकामनाओं के साथ</p>
-              <p className="font-extrabold text-slate-900">डॉ. सुनील कुमार जैन</p>
+              <p className="font-semibold text-slate-800">आपके उज्ज्वल भविष्य की शुभकामनाओ के साथ</p>
+              <p className="font-extrabold text-slate-900">डॉ सुनील जैन</p>
+              <p className="font-extrabold text-slate-900">Dr.Sunniil kumar jain</p>
             </div>
           </div>
         </div>

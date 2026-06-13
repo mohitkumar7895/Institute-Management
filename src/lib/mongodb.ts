@@ -28,26 +28,22 @@ export async function connectDB() {
     );
   }
 
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 15000,
+      socketTimeoutMS: 45000,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then(() => mongoose.connection);
+  }
+
   try {
-    if (cached.conn && mongoose.connection.readyState === 1) {
-      return cached.conn;
-    }
-
-    if (mongoose.connection.readyState !== 0) {
-      cached.conn = null;
-      cached.promise = null;
-    }
-
-    if (!cached.promise) {
-      const opts = {
-        bufferCommands: false,
-        maxPoolSize: 10,
-        serverSelectionTimeoutMS: 15000,
-        socketTimeoutMS: 45000,
-      };
-      cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
-    }
-
     cached.conn = await cached.promise;
     return cached.conn;
   } catch (e: unknown) {

@@ -32,6 +32,10 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
     const {
       name,
       shortName,
+      description,
+      image,
+      pdf,
+      pdfFileName,
       durationMonths,
       registrationFee,
       zone,
@@ -47,6 +51,10 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
     const updateData: Record<string, unknown> = {};
     if (typeof name !== "undefined") updateData.name = name;
     if (typeof shortName !== "undefined") updateData.shortName = shortName;
+    if (typeof description !== "undefined") updateData.description = String(description).trim();
+    if (typeof image !== "undefined") updateData.image = String(image).trim();
+    if (typeof pdf !== "undefined") updateData.pdf = String(pdf).trim();
+    if (typeof pdfFileName !== "undefined") updateData.pdfFileName = String(pdfFileName).trim();
     if (typeof durationMonths !== "undefined") updateData.durationMonths = durationMonths;
     if (typeof registrationFee !== "undefined") updateData.registrationFee = registrationFee;
     if (typeof zone !== "undefined") updateData.zone = zone;

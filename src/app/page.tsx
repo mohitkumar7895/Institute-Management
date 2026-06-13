@@ -4,18 +4,16 @@ import Feedback from "@/components/Feedback";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
-import Team from "@/components/Team";
 import WorkProcess from "@/components/WorkProcess";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="overflow-hidden">
+      <main className="overflow-x-hidden">
         <Hero />
         <Courses />
         <FaqAbout />
-        <Team />
         <WorkProcess />
         <Feedback />
       </main>

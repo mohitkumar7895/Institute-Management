@@ -47,12 +47,18 @@ body {
 
 
 
-img,
+img:not(.course-card-image),
 svg,
 video,
 canvas {
   max-width: 100%;
   height: auto;
+}
+
+.course-card-image {
+  max-width: none;
+  height: 100%;
+  width: 100%;
 }
 
 ::selection {

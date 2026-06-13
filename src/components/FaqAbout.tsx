@@ -6,11 +6,11 @@ import { getBrandName } from "@/lib/settings";
 export default async function FaqAbout() {
   const brandName = await getBrandName();
   return (
-    <section id="about" className="scroll-mt-28 bg-white px-4 py-12 sm:scroll-mt-32 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-      <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.98fr_1.02fr] lg:gap-12 lg:items-start">
-        <div id="faq" className="scroll-mt-28 sm:scroll-mt-32">
+    <section id="about" className="scroll-mt-24 bg-white px-3 py-10 sm:scroll-mt-28 sm:px-6 sm:py-12 lg:scroll-mt-32 lg:px-8 lg:py-16">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 md:gap-10 lg:grid-cols-[0.98fr_1.02fr] lg:gap-12 lg:items-start">
+        <div id="faq" className="scroll-mt-24 sm:scroll-mt-28 lg:scroll-mt-32">
           <div>
-            <h2 className="text-3xl font-black uppercase tracking-tight text-slate-900 sm:text-3xl lg:text-[2.35rem]">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900 sm:text-3xl lg:text-[2.35rem]">
               Frequently <span className="text-[#0a0aa1]">Questions</span>
             </h2>
             <div className="mt-4 h-1 w-18 bg-slate-200" />
@@ -58,7 +58,7 @@ export default async function FaqAbout() {
 
         <div className="lg:pt-0.5">
           <div>
-            <h2 className="text-3xl font-black uppercase tracking-tight text-slate-900 sm:text-3xl lg:text-[2.35rem]">
+            <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900 sm:text-3xl lg:text-[2.35rem]">
               About <span className="text-[#0a0aa1]">Us</span>
             </h2>
             <div className="mt-4 h-1 w-18 bg-slate-200" />
@@ -66,19 +66,19 @@ export default async function FaqAbout() {
 
           <div className="relative mt-9 sm:mt-10">
             <div className="absolute -left-5 top-5 h-28 w-full bg-slate-100 sm:-left-6 sm:top-6 sm:h-32 lg:w-[106%]" />
-            <div className="relative h-44 overflow-hidden sm:h-52 lg:h-44 xl:h-48">
+            <div className="relative h-32 overflow-hidden sm:h-36 lg:h-40">
               <Image
-                src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80"
+                src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80"
                 alt="Computer lab"
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
 
           <div className="mt-5 max-w-xl text-slate-500">
-            <h3 id="about-institute" className="scroll-mt-28 text-2xl font-black tracking-tight text-slate-900 sm:scroll-mt-32 sm:text-[1.9rem]">
+            <h3 id="about-institute" className="scroll-mt-24 text-xl font-black tracking-tight text-slate-900 sm:scroll-mt-28 sm:text-2xl lg:text-[1.9rem]">
               Who we are?
             </h3>
             <div className="mt-3 space-y-2 text-sm leading-7 text-slate-500 sm:text-[0.98rem] sm:leading-8">

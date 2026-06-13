@@ -30,7 +30,7 @@ export default function Footer() {
       <footer id="contact" className="scroll-mt-28 mt-12 bg-[#767171] text-white sm:scroll-mt-32">
       <div className="bg-white text-slate-700">
         <div className="bg-[#090995] text-white">
-          <div className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-6 px-6 py-9 md:flex-row md:items-center md:px-10 lg:px-16">
+          <div className="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-4 px-4 py-7 sm:gap-6 sm:px-6 sm:py-9 md:flex-row md:items-center md:px-10 lg:px-16">
             <div className="max-w-3xl space-y-3">
               <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">
                 Need More Service?
@@ -45,7 +45,7 @@ export default function Footer() {
 
             <Link
               href="#contact"
-              className="inline-flex min-w-36 items-center justify-center rounded-sm border-2 border-white px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-[#090995]"
+              className="inline-flex w-full items-center justify-center rounded-sm border-2 border-white px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-[#090995] sm:w-auto sm:min-w-36"
             >
               CONTACT US
             </Link>
@@ -54,7 +54,7 @@ export default function Footer() {
 
         <div className="overflow-hidden">
           <motion.div
-            className="mx-auto flex w-full max-w-7xl items-center justify-center gap-2 px-6 py-8 text-center text-base font-light text-[#7f7f7f] will-change-transform sm:text-xl lg:text-2xl"
+            className="mx-auto flex w-full max-w-7xl items-center justify-center gap-2 px-4 py-6 text-center text-sm font-light text-[#7f7f7f] will-change-transform sm:px-6 sm:py-8 sm:text-xl lg:text-2xl"
             initial={{ x: "-8%" }}
             animate={
               prefersReducedMotion
@@ -81,7 +81,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-12 md:grid-cols-2 xl:grid-cols-[1.1fr_1fr_1.1fr_1.2fr]">
+      <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-12 md:grid-cols-2 xl:grid-cols-[1.1fr_1fr_1.1fr_1.2fr]">
         <div className="flex items-start justify-center md:justify-start">
           <div className="inline-flex flex-col items-center text-center md:items-start md:text-left">
             <div className="leading-none">
@@ -157,7 +157,7 @@ export default function Footer() {
             <iframe
                title={`${brandName} Map`}
               src={brandAddress ? `https://www.google.com/maps?q=${encodeURIComponent(brandAddress)}&z=15&output=embed` : SITE_INFO.mapEmbedUrl}
-              className="h-62.5 w-full"
+              className="h-48 w-full sm:h-56 md:h-62.5"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
@@ -183,7 +183,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="bg-[#08089d] px-6 py-5 text-white">
+      <div className="bg-[#08089d] px-4 py-4 text-white sm:px-6 sm:py-5">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-2 text-center text-xs font-medium md:flex-row md:text-left sm:text-sm">
            <p>{brandName.toUpperCase()}  © {new Date().getFullYear()}</p>
           <p>
