@@ -146,23 +146,25 @@ export default function Navbar() {
       <div className="border-b border-slate-100 bg-white">
         <div className="mx-auto flex w-full max-w-330 flex-col gap-2 px-3 py-2.5 sm:px-6 sm:py-3 lg:gap-1.5 lg:px-8">
           <div className="flex items-center justify-between gap-3 lg:justify-start lg:gap-4">
-            <Link href="/" onClick={handleNavClick("/")} className="group flex min-w-0 items-start gap-2 sm:gap-3 lg:gap-4">
-              {brandLogo ? (
-                <img
-                  src={brandLogo}
-                  alt={brandName}
-                  className="h-auto max-h-[224px] w-[256px] shrink-0 object-contain sm:max-h-[244px] sm:w-[292px] md:max-h-[260px] md:w-[314px] lg:max-h-[276px] lg:w-[348px] xl:max-h-[292px] xl:w-[376px]"
-                />
-              ) : (
-                <Image
-                  src="/ygroup-logo.svg"
-                  alt={brandName}
-                  width={420}
-                  height={176}
-                  className="h-auto w-[256px] shrink-0 object-contain sm:w-[292px] md:w-[314px] lg:w-[348px] xl:w-[376px]"
-                  priority
-                />
-              )}
+            <div className="group flex min-w-0 items-start gap-2 sm:gap-3 lg:gap-4">
+              <Link href="/" onClick={handleNavClick("/")} className="shrink-0">
+                {brandLogo ? (
+                  <img
+                    src={brandLogo}
+                    alt={brandName}
+                    className="h-auto max-h-[224px] w-[256px] shrink-0 object-contain sm:max-h-[244px] sm:w-[292px] md:max-h-[260px] md:w-[314px] lg:max-h-[276px] lg:w-[348px] xl:max-h-[292px] xl:w-[376px]"
+                  />
+                ) : (
+                  <Image
+                    src="/ygroup-logo.svg"
+                    alt={brandName}
+                    width={420}
+                    height={176}
+                    className="h-auto w-[256px] shrink-0 object-contain sm:w-[292px] md:w-[314px] lg:w-[348px] xl:w-[376px]"
+                    priority
+                  />
+                )}
+              </Link>
               <div className="flex min-w-0 flex-1 flex-col gap-1 sm:gap-1.5 lg:pt-1">
                 <div className="flex min-w-0 flex-col leading-none tracking-tight text-[#0a0aa1]">
                   <span className="text-sm font-black uppercase sm:text-[15px] lg:text-[21px] xl:text-[23px]">
@@ -208,7 +210,7 @@ export default function Navbar() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
 
             <div className="hidden shrink-0 flex-col items-center gap-2 lg:ml-4 lg:flex xl:ml-8">
               <div className="grid grid-cols-2 gap-3">
