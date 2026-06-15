@@ -144,79 +144,130 @@ export default function Navbar() {
       </div>
 
       <div className="border-b border-slate-100 bg-white">
-        <div className="mx-auto flex w-full max-w-330 flex-wrap items-center justify-between gap-3 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3 lg:gap-6 lg:px-8">
-          <Link href="/" onClick={handleNavClick("/")} className="group flex min-w-0 flex-1 items-center gap-2 sm:ml-1 sm:gap-3 lg:ml-4 lg:gap-4">
-            {brandLogo ? (
-              <img
-                src={brandLogo}
-                alt={brandName}
-                className="h-auto max-h-32 w-36 shrink-0 object-contain sm:max-h-40 sm:w-52 md:max-h-52 md:w-64 lg:max-h-64 lg:w-80"
-              />
-            ) : (
-              <Image
-                src="/ygroup-logo.svg"
-                alt={brandName}
-                width={400}
-                height={168}
-                className="h-auto w-36 shrink-0 object-contain sm:w-52 md:w-64 lg:w-80"
-                priority
-              />
-            )}
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:gap-1">
-              <span className="truncate text-sm font-black uppercase leading-none tracking-tight text-[#0a0aa1] sm:text-base lg:text-xl">
-                {brandName}
-              </span>
-              <div className="hidden min-w-0 border-l-2 border-[#0a0aa1]/20 pl-2 sm:block sm:pl-2.5">
-                <p className="text-[10px] font-bold uppercase leading-snug tracking-wide text-[#0a0aa1]/90 sm:text-[11px] lg:text-xs">
-                  SIFT Skill Development Institute
-                </p>
-                <p className="max-w-[220px] text-[9px] font-medium leading-snug text-slate-600 sm:max-w-xs sm:text-[10px] lg:max-w-sm lg:text-[11px]">
-                  Undertaken by Sunil Group of Education Fashion and Technology Trust
-                </p>
+        <div className="mx-auto flex w-full max-w-330 flex-col gap-2 px-3 py-2.5 sm:px-6 sm:py-3 lg:gap-1.5 lg:px-8">
+          <div className="flex items-center justify-between gap-3 lg:justify-start lg:gap-4">
+            <div className="group flex min-w-0 items-start gap-2 sm:gap-3 lg:gap-4">
+              <Link href="/" onClick={handleNavClick("/")} className="shrink-0">
+                {brandLogo ? (
+                  <img
+                    src={brandLogo}
+                    alt={brandName}
+                    className="h-auto max-h-[224px] w-[256px] shrink-0 object-contain sm:max-h-[244px] sm:w-[292px] md:max-h-[260px] md:w-[314px] lg:max-h-[276px] lg:w-[348px] xl:max-h-[292px] xl:w-[376px]"
+                  />
+                ) : (
+                  <Image
+                    src="/ygroup-logo.svg"
+                    alt={brandName}
+                    width={420}
+                    height={176}
+                    className="h-auto w-[256px] shrink-0 object-contain sm:w-[292px] md:w-[314px] lg:w-[348px] xl:w-[376px]"
+                    priority
+                  />
+                )}
+              </Link>
+              <div className="flex min-w-0 flex-1 flex-col gap-1 sm:gap-1.5 lg:pt-1">
+                <div className="flex min-w-0 flex-col leading-none tracking-tight text-[#0a0aa1]">
+                  <span className="text-sm font-black uppercase sm:text-[15px] lg:text-[21px] xl:text-[23px]">
+                    SUNIL GROUP OF EDUCATION FASHION AND
+                  </span>
+                  <span className="text-sm font-black uppercase sm:text-[15px] lg:text-[21px] xl:text-[23px]">
+                    TECHNOLOGY TRUST
+                  </span>
+                </div>
+                <div className="hidden min-w-0 border-l-2 border-[#0a0aa1]/20 pl-2 sm:block sm:pl-2.5">
+                  <p className="text-[10px] font-bold uppercase leading-snug tracking-wide text-[#0a0aa1]/90 sm:text-[11px] lg:text-xs">
+                    SIFT Skill Development Institute
+                  </p>
+                  <p className="max-w-[280px] text-[9px] font-medium leading-snug text-slate-600 sm:max-w-xs sm:text-[10px] lg:max-w-sm lg:text-[11px]">
+                    Undertaken by Sunil Group of Education Fashion and Technology Trust
+                  </p>
+                  <div className="mt-2 flex flex-col gap-2 lg:gap-2.5">
+                    <a
+                      href={brandEmail ? `mailto:${brandEmail}` : undefined}
+                      className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandEmail ? "hover:opacity-80" : "pointer-events-none"}`}
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#0a0aa1] text-white shadow-sm lg:h-10 lg:w-10">
+                        <Mail className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Email Us</p>
+                        <p className="truncate text-xs font-semibold text-slate-800 lg:text-sm">{brandEmail || "Not available"}</p>
+                      </div>
+                    </a>
+
+                    <a
+                      href={brandMobile ? `tel:${brandMobile.replace(/\s/g, "")}` : undefined}
+                      className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandMobile ? "hover:opacity-80" : "pointer-events-none"}`}
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[#0a0aa1] shadow-sm ring-1 ring-slate-200 lg:h-10 lg:w-10">
+                        <Phone className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Call Us</p>
+                        <p className="whitespace-nowrap text-xs font-semibold text-slate-800 lg:text-sm">{brandMobile || "Not available"}</p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
-          </Link>
 
-          <div className="hidden shrink-0 items-center lg:flex">
-            <div className="flex flex-col gap-3 border-l border-slate-200 pl-4 lg:gap-4 lg:pl-6">
-              <a
-                href={brandEmail ? `mailto:${brandEmail}` : undefined}
-                className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandEmail ? "hover:opacity-80" : "pointer-events-none"}`}
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#0a0aa1] text-white shadow-sm">
-                  <Mail className="h-4 w-4" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Email Us</p>
-                  <p className="truncate text-xs font-semibold text-slate-800 lg:text-sm">{brandEmail || "Not available"}</p>
+            <div className="hidden shrink-0 flex-col items-center gap-2 lg:ml-4 lg:flex xl:ml-8">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative h-44 w-44 overflow-hidden rounded-[18px] bg-white shadow-sm xl:h-40 xl:w-40">
+                  <Image
+                    src="/certificate.jpeg"
+                    alt="Certificate"
+                    fill
+                    unoptimized
+                    className="object-contain p-1"
+                  />
                 </div>
-              </a>
-
-              <a
-                href={brandMobile ? `tel:${brandMobile.replace(/\s/g, "")}` : undefined}
-                className={`inline-flex items-center gap-2.5 lg:gap-3 ${brandMobile ? "hover:opacity-80" : "pointer-events-none"}`}
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-[#0a0aa1] shadow-sm ring-1 ring-slate-200">
-                  <Phone className="h-4 w-4" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 lg:text-[11px]">Call Us</p>
-                  <p className="whitespace-nowrap text-xs font-semibold text-slate-800 lg:text-sm">{brandMobile || "Not available"}</p>
+                <div className="relative h-44 w-44 overflow-hidden rounded-[18px] bg-white shadow-sm xl:h-40 xl:w-40">
+                  <Image
+                    src="/trophhy.jpeg"
+                    alt="Trophy"
+                    fill
+                    unoptimized
+                    className="object-contain p-1"
+                  />
                 </div>
-              </a>
+                <div className="relative h-44 w-44 overflow-hidden rounded-[18px] bg-white shadow-sm xl:h-40 xl:w-40">
+                  <Image
+                    src="/p1.jpeg"
+                    alt="P1"
+                    fill
+                    unoptimized
+                    className="object-contain p-1"
+                  />
+                </div>
+                <div className="relative h-44 w-44 overflow-hidden rounded-[18px] bg-white shadow-sm xl:h-40 xl:w-40">
+                  <Image
+                    src="/p2.jpeg"
+                    alt="P2"
+                    fill
+                    unoptimized
+                    className="object-contain p-1"
+                  />
+                </div>
+              </div>
+              <p className="text-center text-[11px] font-black uppercase tracking-[0.22em] text-[#0a0aa1] xl:text-xs">
+                State award winner institute
+              </p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              className="inline-flex shrink-0 items-center justify-center rounded-md border border-slate-200 p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden"
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-nav"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((open) => !open)}
-            className="inline-flex shrink-0 items-center justify-center rounded-md border border-slate-200 p-2 text-slate-700 transition hover:bg-slate-100 lg:hidden"
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-nav"
-            aria-label="Toggle navigation menu"
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
 
         {isMobileMenuOpen ? (
@@ -257,7 +308,7 @@ export default function Navbar() {
       >
         <div
           id="mobile-nav"
-          className={`mx-auto w-full max-w-330 overflow-x-clip px-2 py-2 lg:flex lg:items-center lg:justify-center lg:px-8 ${
+          className={`mx-auto w-full max-w-330 overflow-x-clip px-2 py-2 lg:flex lg:items-center lg:justify-start lg:px-8 ${
             isMobileMenuOpen ? "flex flex-col" : "hidden"
           } lg:flex`}
         >

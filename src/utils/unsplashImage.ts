@@ -1,12 +1,18 @@
-export function courseCardImage(slug: string, width = 800, height = 500) {
-  const safe = slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  return `https://picsum.photos/seed/sift-${safe}/${width}/${height}`;
-}
+import {
+  DEFAULT_COURSE_IMAGE,
+  getCourseImageByName,
+  getCourseImageBySlug,
+} from "@/utils/courseImages";
 
-export function unsplashCourseImage(photoId: string, width = 800) {
-  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${width}&h=500&q=75`;
+export function courseCardImage(slug: string) {
+  return getCourseImageBySlug(slug) ?? DEFAULT_COURSE_IMAGE;
 }
 
 export function courseImageFallback(title: string) {
-  return courseCardImage(title.replace(/\s+/g, "-"));
+  return getCourseImageByName(title) ?? DEFAULT_COURSE_IMAGE;
+}
+
+/** @deprecated Use courseCardImage or getCourseImageByName instead. */
+export function unsplashCourseImage(_photoId: string, _width = 800) {
+  return DEFAULT_COURSE_IMAGE;
 }

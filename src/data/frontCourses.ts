@@ -134,6 +134,24 @@ export const FRONT_COURSE_LIST: FrontCourseItem[] = [
     description: "Mechanical fitting, tools, assembly, and industrial maintenance training.",
     image: courseCardImage("fitter-training-program"),
   },
+  {
+    slug: "motar-car-repairing",
+    name: "Motar car repairing",
+    description: "Motor vehicle repair, engine diagnostics, and automobile maintenance skills.",
+    image: courseCardImage("motar-car-repairing"),
+  },
+  {
+    slug: "freeze-repairing",
+    name: "Freeze repairing",
+    description: "Refrigerator and freezer repair, cooling systems, and appliance servicing.",
+    image: courseCardImage("freeze-repairing"),
+  },
+  {
+    slug: "belding-machine-training-program",
+    name: "Belding machine training program",
+    description: "Welding machine operation, fusion techniques, and industrial welding skills.",
+    image: courseCardImage("belding-machine-training-program"),
+  },
 ];
 
 export const FRONT_COURSES = FRONT_COURSE_LIST.map((course) => course.name);
